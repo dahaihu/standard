@@ -14,6 +14,7 @@ with open(original_path, 'r', newline='') as file:
             continue
         image_url = eval(ele[1]).get('image_url')
         # print(image_url)
+        # 根据image_url 去掉时间，获得文件名字
         tmp = re.sub(r'_\d{10}', '', image_url.split('/')[-1])
         print(tmp)
         a.add(tmp)

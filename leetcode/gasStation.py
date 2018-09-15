@@ -1,33 +1,4 @@
 class Solution:
-    def canCompleteCircuit(self, gas, cost):
-        """
-        :type gas: List[int]
-        :type cost: List[int]
-        :rtype: int
-        """
-        mark = list(map(lambda x, y: x-y, gas, cost))
-        print(mark)
-        if sum(mark) < 0:
-            return -1
-        NUM = len(mark)
-        table = [[0 for _ in range(NUM)] for _ in range(NUM)]
-        for i in range(NUM):
-            table[i][0] = mark[i]
-        # for ele in table:
-        #     print(ele)
-        for i in range(1, NUM):
-            for j in range(NUM):
-                table[j][i] = table[j][i-1] + mark[(i + j) % NUM]
-        for ele in table:
-            print("***" + str(ele))
-        for ind, nums in enumerate(table):
-            for ele in nums:
-                if ele < 0:
-                    break
-            else:
-                return ind
-        return -1
-
     def simplist(self, gas, cost):
         mark = list(map(lambda x, y: x - y, gas, cost))
         print(mark)
@@ -45,16 +16,39 @@ class Solution:
                 return i
         return -1
 
+    def canCompleteCircuit(self, gas, cost):
+        """
+        双指针的策略，
+        这个题目怎么说呢，
+        如果sum(mark) < 0 那么肯定无解
+        如果sum(mark) >= 0 那么肯定有解
+        而有解呢，就是走一圈。
+        往前走不行的话，只能后退，始发地点可以的索引可以减1
+        :param gas:
+        :param cost:
+        :return:
+        """
+        mark = list(map(lambda x, y: x - y, gas, cost))
+        if sum(mark) < 0:
+            return -1
+        print(mark)
+        i, j = 0, len(mark) - 1
+        tmp = 0
+        while i <= j:
+            if tmp < 0:
+                tmp += mark[j]
+                j -= 1
+            else:
+                tmp += mark[i]
+                i += 1
+        return j+1 if j != len(mark)-1 else 0
 
 
+gas = [2, 3, 4]
+cost = [3, 4, 3]
 
-
-
-
-
-
-
+# gas = [1, 2, 3, 4, 5]
+# cost = [3, 4, 5, 1, 2]
 s = Solution()
-res = s.simplist([1, 2, 3, 4, 5], [3, 4, 5, 1, 2])
-# print(res)
-
+res = s.canCompleteCircuit(gas, cost)
+print(res)

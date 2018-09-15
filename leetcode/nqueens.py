@@ -1,4 +1,7 @@
 class Solution:
+    """
+    每个人做自己的事，不能越权，也不能不做好自己
+    """
     def __init__(self):
         self.count = 0
 
