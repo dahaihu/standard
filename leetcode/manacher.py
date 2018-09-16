@@ -15,6 +15,7 @@ class Solution:
                     # while new_nums[i - mark[i]] == new_nums[i + mark[i]]:
                     #     mark[i] += 1
             # else:
+            # 在确定加1的情况下，再进行加一
             while new_nums[i - mark[i] - 1] == new_nums[i + mark[i] + 1]:
                 mark[i] += 1
             # mark[i] -= 1
