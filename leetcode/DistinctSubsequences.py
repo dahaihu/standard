@@ -49,7 +49,7 @@ class Solution:
         for i in range(len(s)):
             if s[i] == t[0]:
                 print("i is {}, s[i] is {}, t is {}".format(i, s[i], t))
-                self.func(s[i+1:], t[1:])
+                self.func(s[i + 1:], t[1:])
 
     def numDistinct(self, s, t):
         """
@@ -66,11 +66,12 @@ class Solution:
         print(mark)
         for i in range(1, len(t) + 1):
             for j in range(1, len(s) + 1):
-                if s[j-1] == t[i-1]:
-                    mark[i][j] = mark[i-1][j-1] + mark[i][j-1]
+                if s[j - 1] == t[i - 1]:
+                    mark[i][j] = mark[i - 1][j - 1] + mark[i][j - 1]
                 else:
-                    mark[i][j] = mark[i][j-1]
+                    mark[i][j] = mark[i][j - 1]
         return mark[-1][-1]
+
 
 S = 'babgbag'
 T = 'bag'
