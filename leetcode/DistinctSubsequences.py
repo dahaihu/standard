@@ -35,6 +35,12 @@ class Solution:
         return self.count
 
     def func(self, s, t):
+        """
+        添加评论
+        :param s:
+        :param t:
+        :return:
+        """
         if not t:
             self.count += 1
             return
