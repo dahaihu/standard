@@ -5,8 +5,6 @@ import os
 
 base_dir = '/home/hsc/桌面/'
 pic_dir = '/media/hsc/Seagate Expansion Drive/Siri/59点原图/draw_openpose/'
-# show_dir = '/media/hsc/Seagate Expansion Drive/Siri/59点原图/new_5908/'
-# txt_dir = '/Volumes/STARDUST/txt/'
 
 index = 0
 # csvFile = open("/media/hsc/Seagate Expansion Drive/Siri/59点原图/new_5908.csv", "r")
@@ -35,10 +33,12 @@ for path in ['60点3_400_1537244130.csv', '5911_194_预标_401_1537244210.csv', 
             try:
                 for i in range(len(data_x) - 1):
                     print(data_x[i], data_y[i])
-                    cv2.line(img, (int(data_x[i]), int(data_y[i])), (int(data_x[i + 1]), int(data_y[i + 1])), (0, 0, 255), 2)
+                    cv2.line(img, (int(data_x[i]), int(data_y[i])), (int(data_x[i + 1]), int(data_y[i + 1])),
+                             (0, 0, 255), 2)
                 for i in range(len(data_x)):
                     # f.write(str(data_x[i]) + ' ' + str(data_y[i]) + '\n')
-                    cv2.putText(img, str(i), (int(data_x[i]), int(data_y[i])), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+                    cv2.putText(img, str(i), (int(data_x[i]), int(data_y[i])), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0),
+                                2)
                     cv2.circle(img, (int(data_x[i]), int(data_y[i])), 1, (0, 255, 0), 3)
                     # cv2.line(img,(int(data_x[i]),int(data_y[i])),(int(data_x[i+1]),int(data_y[i+1])),(255,0,255),2)
             except ValueError:
@@ -46,11 +46,7 @@ for path in ['60点3_400_1537244130.csv', '5911_194_预标_401_1537244210.csv', 
                     csvwriter = csv.writer(file)
                     csvwriter.writerow(item)
                 continue
-            # data_x = item[2].split('y')[1:]
-            # data_y = item[2].split('y')
             print(picname)
-            # f.close()
-            # print(type(item[2][1]))
             cv2.imwrite(os.path.join(show_dir, picname), img)
         print(index)
 
