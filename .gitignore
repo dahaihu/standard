@@ -26,4 +26,4 @@ uploads/*.csv
 uploads/*.txt
 uploads/*/*
 
-./idea*
+.idea/*
