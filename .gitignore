@@ -25,3 +25,5 @@ celerybeat-schedule
 uploads/*.csv
 uploads/*.txt
 uploads/*/*
+
+./idea*
