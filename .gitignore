@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/*
+
+# Pycharm Developing Environment
+.idea/*
+
+# Python Interpreters
+__pycache__/
+.pytest_cache/
+tests/.pytest_cache/
+
+# VSCode
+.vscode/*
+
+# Config
+# config/config.py
+
+# celery beats
+celerybeat-schedule
+
+# qiniu_sdk
+.qiniu_pythonsdk_hostscache.json
+
+# csv 和 txt
+uploads/*.csv
+uploads/*.txt
+uploads/*/*
