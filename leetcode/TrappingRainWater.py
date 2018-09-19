@@ -10,9 +10,10 @@ Input: [0,1,0,2,1,0,1,3,2,1,2,1]
 Output: 6
 """
 
+
 class Solution:
     def trap(self, height):
-        left, right = 0, len(height)-1
+        left, right = 0, len(height) - 1
         res = 0
         mxleft = mxright = 0
         while left < right:
@@ -29,5 +30,7 @@ class Solution:
                     mxright = height[right]
                 right -= 1
         return res
+
+
 s = Solution()
-print(s.trap([0,1,0,2,1,0,1,3,2,1,2,1]))
+print(s.trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))
