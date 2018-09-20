@@ -18,6 +18,7 @@ class ImageAnnotation:
         r = request.urlopen(url)
         self.url = url
         self.annotation = annotation
+        # 有没有可能不保存图片，直接将二进制的图片渲染，然后上传，免去保存和读取的过程
         self.name = name
         f = open('uploads/'+name+'.png', 'wb')
         f.write(r.read())
@@ -30,6 +31,8 @@ class ImageAnnotation:
     def draw_rectangle(self, anno, value):
         color = next(self.colors)
         points = [(point.get('x'), point.get('y')) for point in anno]
+        # 这个是对矩形的四个坐标进行排序，让这四个点顺序链接的时候，是一个矩形
+        # 基本思想是，确定第一个点和第三个点，这两个点的横纵坐标都是不同的
         ind = 0
         for i in range(1, 4):
             if points[0][0] == points[i][0] or points[0][1] == points[i][1]:
@@ -38,10 +41,14 @@ class ImageAnnotation:
                 ind = i
                 break
         points[ind], points[2] = points[2], points[ind]
+
+        # rgb三元组添加个50，代表百分之五十，添加透明度的
         self.draw.polygon(points, fill=color+(50,), outline=color)
         point_1, point_2 = points[0], points[2]
         x = point_1[0] if point_1[0] < point_2[0] else point_2[0]
         y = point_1[1] if point_1[1] < point_2[1] else point_2[1]
+        # 设置字体，要不然中文会乱码
+        # 这个里面的位置要写相对位置，相对于项目的其实位置，比如说这个项目，那就是从standard之后开始写(注意中间有个之后)
         font = ImageFont.truetype('/home/hsc/下载/simsun.ttc', 18)
         self.draw.text((x, y), value, font=font, fill=(0, 0, 0))
 
