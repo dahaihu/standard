@@ -207,4 +207,4 @@ def newfunc(path):
                         file.write(str(round((gao) / size[1], 12)))
                         file.write('\n')
         print('error count is ', c)
-oldfunc('/Users/mac/Desktop/结果92.csv')
+newfunc('/Users/mac/Desktop/结果295.csv')
