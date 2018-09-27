@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavScript页面悬浮框- 何问起</title>
+    <base target="_blank"/>
+    <style>
+        body {
+            height: 2000px;
+        }
+
+        #div1 {
+            width: 100px;
+            height: 150px;
+            background: red;
+            position: absolute;
+            right: 0;
+            top: 200px;
+        }
+
+        #div2 {
+            width: 200px;
+            height: 200px;
+            background: green;
+            position: absolute;
+            left: 0;
+            top: 200px;
+        }
+
+        a {
+            color: white
+        }
+    </style>
+</head>
+<body>
+<div id="div1"><a href="http://hovertree.com">何问起</a> <a href="http://hovertree.com/texiao/">特效</a></div>
+<div id="div2"><a href="http://hovertree.com/h/bjaf/mbrpxe4o.htm">原文</a>
+    <a href="http://hovertree.com/texiao/jsstudy/1/">效果</a>
+</div>
+<div id="hovertree"
+     style="position:fixed;top:100px;left:40%;z-index:99;height:100px;width:100px;background-color:silver"></div>
+<div>在一个页面放2个悬浮框，悬浮框随页面的上下滚动有上下波动的效果，最终固定在同一位置</div>
+<script>
+    var h_div1 = document.getElementById('div1'), h_div2 = document.getElementById('div2');
+    var h_hvttop = 200;
+//这个应该就算是window滑动的时候，就运作是吧？
+    window.onscroll = function () {
+        HoverTreeMove(h_div1, h_hvttop);
+        HoverTreeMove(h_div2, h_hvttop);
+//显示信息
+        var h_scrollTop = document.documentElement.scrollTop || document.body.scrollTop;//滚动的距离
+        var h_hovertree = document.getElementById('hovertree');
+        h_hovertree.innerHTML = h_div1.offsetTop + " hovertree<br /> " + h_scrollTop + "<br />" + h_div1.style.top;
+    };
+
+    function HoverTreeMove(obj, top) {
+        //  滑动框滚动的距离
+        // 不同浏览器对该参数读取的方法是不一样的
+        var h_scrollTop = document.documentElement.scrollTop || document.body.scrollTop;//滚动的距离
+        // 这个值是用来干什么的
+        var h_buchang = 20;
+        // obj.offsetTop 指的事对象距离页面顶部的距离
+        if (obj.offsetTop < h_scrollTop + top - h_buchang) {
+            obj.style.top = obj.offsetTop + h_buchang + "px";
+            setTimeout(function () {
+                HoverTreeMove(obj, top);
+            }, 80);
+        }
+        else if (obj.offsetTop > h_scrollTop + top + h_buchang) {
+            obj.style.top = (obj.offsetTop - h_buchang) + "px";
+            setTimeout(function () {
+                HoverTreeMove(obj, top);
+            }, 80);
+        }
+        else {
+            obj.style.top = h_scrollTop + top + "px";
+        }
+    }
+
+    HoverTreeMove(h_div1, 200);
+    HoverTreeMove(h_div2, 200);
+</script>
+</body>
+</html>
