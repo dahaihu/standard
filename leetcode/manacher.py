@@ -2,6 +2,7 @@ class Solution:
     def longestPalindrome(self, s):
         # new_nums = '!#' + '#'.join(nums) + '#$'
         nums = list(s)
+        # 索引的话，为什么就一定要想着是列表呢？ 你个傻子
         new_nums = '!#' + '#'.join(nums) + '#$'
         print('new_nums is {}'.format(new_nums))
         mark = [0 for _ in range(len(new_nums))]

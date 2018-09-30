@@ -1,8 +1,9 @@
 import psycopg2
 import csv
-conn = psycopg2.connect(database="startask", user="stardust", password="tester", host="117.50.3.122", port="5432")
+# conn = psycopg2.connect(database="startask", user="stardust", password="tester", host="117.50.3.122", port="5432")
+conn = psycopg2.connect(database="startask", user="startask", password="Startask789&*(", host="rm-2zej4yocsipaw7z83qo.pg.rds.aliyuncs.com", port="3432")
 cur = conn.cursor()
-sql = 'select id from sd_task where project_id=499 and status=6'
+sql = f'select id from sd_task where project_id in {(59, 60, 70)} and status=6'
 # 获取task为conflict的task_id
 res = []
 cur.execute(sql)

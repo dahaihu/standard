@@ -2,6 +2,7 @@ class Solution:
     """
     每个人做自己的事，不能越权，也不能不做好自己
     """
+
     def __init__(self):
         self.count = 0
 
@@ -23,8 +24,8 @@ class Solution:
             for i in range(len(nums)):
                 if self.valid(nums, cur, i):
                     nums[cur] = i
-                    self.dfs(nums, cur+1)
+                    self.dfs(nums, cur + 1)
 
 
 s = Solution()
-print(s.solve(8))
+print(s.solve(4))

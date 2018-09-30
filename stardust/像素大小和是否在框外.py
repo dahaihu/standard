@@ -127,14 +127,15 @@ def newfunc(path):
             resp = requests.get(url)
             # # # 获取图像的内容
             # img = resp.content
-            print('url is ', url)
+            # print('url is ', url)
             f = open(url.split('/')[-1], 'wb')
             f.write(resp.content)
             img = Image.open(url.split('/')[-1])
             size = img.size
-            print('size is ', size)
+            # print('size is ', size)
             # break
             # 获取所有的点
+            print('ind is {}'.format(ind))
             for attr in eval(line[-1]):
                 print(f'attr is {attr}')
                 for value, point_list in attr.items():
@@ -149,6 +150,7 @@ def newfunc(path):
                         else:
                             z = d[value[-1]]
                     except KeyError:
+                        print('value is {}'.format(value))
                         continue
                     if not isinstance(z, int):
                         print('invalid z is {}'.format(z))
@@ -162,43 +164,16 @@ def newfunc(path):
                             ind = i
                             break
                     points[ind], points[2] = points[2], points[ind]
-                    print(points)
+                    # print(points)
                     for point in points:
                         point[0] = size[0] if point[0] > size[0] else point[0]
                         point[1] = size[1] if point[1] > size[1] else point[1]
                     final_points = [[min(points[0][0], points[2][0]), min(points[0][1], points[2][1])], [max(points[0][0], points[2][0]), max(points[0][1], points[2][1])]]
-                    print('final_points', final_points)
-                    kuan = abs(final_points[0][0] - final_points[1][0])
-                    gao = abs(final_points[0][1] - final_points[1][1])
-                    # kuan = abs(points[0][0] - points[2][0])
-                    # gao = abs(points[0][1] - points[2][1])
-                    if kuan < 15 or gao < 15:
-                        if kuan < 15:
-                            final_points[0][0] -= 15 - kuan
-                        elif gao < 15:
-                            final_points[0][1] -= 15 - gao
-                        if final_points[0][0] < 0 and not final_points[0][1] < 0:
-                            print(final_points)
-                            final_points = [[0, final_points[0][1]], [final_points[1][0]+abs(final_points[0][0]), final_points[1][1]]]
-                            print(final_points)
-                            print(1)
-                            return
-                        elif final_points[0][1] < 0 and not final_points[0][0] > 0:
-                            print(final_points)
-                            final_points = [[final_points[0][0], 0], [final_points[1][0], final_points[1][1] + abs(final_points[0][1])]]
-                            print(final_points)
-                            print(2)
-                            return
-                        elif final_points[0][0] < 0 and final_points[0][1] < 0:
-                            print(final_points)
-                            final_points = [[0, 0], [15, 15]]
-                            print(final_points)
-                            print(3)
-                            return
+                    # print('final_points', final_points)
                     kuan = abs(final_points[0][0] - final_points[1][0])
                     gao = abs(final_points[0][1] - final_points[1][1])
                     # print(url.split('/')[-1].split('.')[0])
-                    print(re.sub(r'(?<=_0)_\d{10}', '', '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt')
+                    # print(re.sub(r'(?<=_0)_\d{10}', '', '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt')
                     with open(result_dir+'/'+re.sub(r'(?<=_0)_\d{10}', '', '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt', newline='', mode='a') as file:
                         file.write(str(z) + ' ')
                         file.write(str(round((final_points[0][0] + final_points[1][0]) / 2 / size[0], 12)) + ' ')
@@ -207,4 +182,10 @@ def newfunc(path):
                         file.write(str(round((gao) / size[1], 12)))
                         file.write('\n')
         print('error count is ', c)
-newfunc('/Users/mac/Desktop/结果295.csv')
+# for ele in os.listdir('/Users/mac/Desktop'):
+#     print(ele)
+#     if not ele.endswith('.csv'):
+#         continue
+#     print(ele)
+# newfunc('/Users/mac/Desktop/总.csv')
+print(len(os.listdir('总')))
