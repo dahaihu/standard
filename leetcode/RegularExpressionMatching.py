@@ -54,6 +54,9 @@ class Solution:
         m, n = len(p), len(s)
         mark = [[False for _ in range(n + 1)] for _ in range(m + 1)]
         mark[0][0] = True
+        # 分别对p和s长度为0时进行赋值
+        # 因为后面矩阵进行求值的时候都要用到i-1,j-1或者i-2之类的
+        # 不先赋值的话，后面得求值都会是错误的
         for i in range(1, m+1):
             if p[i-1] == '*':
                 mark[i][0] = mark[i-2][0]
@@ -73,6 +76,10 @@ class Solution:
                 elif p[i-1] == '*':
                     # '*'前面的元素长度为1，或者为0
                     mark[i][j] = mark[i-2][j] or mark[i-1][j]
+                    # '*'前面的元素的长度为多个，
+                    # 这个多个也有两种情况
+                    # 情况1 前面的元素为a-z意义上的多个
+                    # 情况2 前面的元素为'.'意义上的多个
                     if p[i-2] == s[j-1] or p[i-2] == '.':
                         mark[i][j] |= mark[i][j-1]
         print('*' * 10)
