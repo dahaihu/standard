@@ -45,6 +45,11 @@ p = "mis*is*p*."
 输出: false
 """
 class Solution:
+    """
+    动态规划解题的先决条件
+    1. 知道状态转移方程
+    2. 熟悉边界条件
+    """
     def isMatch(self, s, p):
         """
         :type s: str
