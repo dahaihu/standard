@@ -16,7 +16,9 @@ from PIL import ImageFont
 from urllib import request
 from itertools import cycle
 
-d = {'南': 0, '西': 1, '北': 2, '东': 3, '西南': 4, '东南': 5, '东北': 6,'西北': 7,'头': 8, '脚': 9}
+d = {'南': 0, '西': 1, '北': 2, '东': 3, '西南': 4, '东南': 5, '东北': 6, '西北': 7, '头': 8, '脚': 9}
+
+
 def oldfunc(path):
     result_dir = path.split('/')[-1].split('.')[0]
     if not os.path.isdir(result_dir):
@@ -68,7 +70,8 @@ def oldfunc(path):
                 for point in points:
                     point[0] = size[0] if point[0] > size[0] else point[0]
                     point[1] = size[1] if point[1] > size[1] else point[1]
-                final_points = [[min(points[0][0], points[2][0]), min(points[0][1], points[2][1])], [max(points[0][0], points[2][0]), max(points[0][1], points[2][1])]]
+                final_points = [[min(points[0][0], points[2][0]), min(points[0][1], points[2][1])],
+                                [max(points[0][0], points[2][0]), max(points[0][1], points[2][1])]]
                 print('final_points', final_points)
                 kuan = abs(final_points[0][0] - final_points[1][0])
                 gao = abs(final_points[0][1] - final_points[1][1])
@@ -81,13 +84,15 @@ def oldfunc(path):
                         final_points[0][1] -= 15 - gao
                     if final_points[0][0] < 0 and not final_points[0][1] < 0:
                         print(final_points)
-                        final_points = [[0, final_points[0][1]], [final_points[1][0]+abs(final_points[0][0]), final_points[1][1]]]
+                        final_points = [[0, final_points[0][1]],
+                                        [final_points[1][0] + abs(final_points[0][0]), final_points[1][1]]]
                         print(final_points)
                         print(1)
                         return
                     elif final_points[0][1] < 0 and not final_points[0][0] > 0:
                         print(final_points)
-                        final_points = [[final_points[0][0], 0], [final_points[1][0], final_points[1][1] + abs(final_points[0][1])]]
+                        final_points = [[final_points[0][0], 0],
+                                        [final_points[1][0], final_points[1][1] + abs(final_points[0][1])]]
                         print(final_points)
                         print(2)
                         return
@@ -101,22 +106,24 @@ def oldfunc(path):
                 gao = abs(final_points[0][1] - final_points[1][1])
                 # print(url.split('/')[-1].split('.')[0])
                 print(re.sub(r'(?<=_0)_\d{10}', '', '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt')
-                with open(result_dir+'/'+re.sub(r'(?<=_0)_\d{10}', '', '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt', newline='', mode='a') as file:
+                with open(result_dir + '/' + re.sub(r'(?<=_0)_\d{10}', '',
+                                                    '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt', newline='',
+                          mode='a') as file:
                     file.write(str(z) + ' ')
-                    file.write(str(round((final_points[0][0] + final_points[1][0])/2/size[0], 12)) + ' ')
-                    file.write(str(round((final_points[0][1] + final_points[1][1])/2/size[1], 12)) + ' ')
-                    file.write(str(round((kuan)/size[0], 12)) + ' ')
-                    file.write(str(round((gao)/size[1], 12)))
+                    file.write(str(round((final_points[0][0] + final_points[1][0]) / 2 / size[0], 12)) + ' ')
+                    file.write(str(round((final_points[0][1] + final_points[1][1]) / 2 / size[1], 12)) + ' ')
+                    file.write(str(round((kuan) / size[0], 12)) + ' ')
+                    file.write(str(round((gao) / size[1], 12)))
                     file.write('\n')
-        print('error count is ', c)
 
+        print('error count is ', c)
 
 
 def newfunc(path):
     result_dir = path.split('/')[-1].split('.')[0]
     if not os.path.isdir(result_dir):
         os.mkdir(result_dir)
-    with open(path, 'r', newline='') as file:
+    with open(path, 'r', newline='', encoding='utf8') as file:
         csvreader = csv.reader(file)
         c = 0
         for ind, line in enumerate(csvreader):
@@ -168,13 +175,16 @@ def newfunc(path):
                     for point in points:
                         point[0] = size[0] if point[0] > size[0] else point[0]
                         point[1] = size[1] if point[1] > size[1] else point[1]
-                    final_points = [[min(points[0][0], points[2][0]), min(points[0][1], points[2][1])], [max(points[0][0], points[2][0]), max(points[0][1], points[2][1])]]
+                    final_points = [[min(points[0][0], points[2][0]), min(points[0][1], points[2][1])],
+                                    [max(points[0][0], points[2][0]), max(points[0][1], points[2][1])]]
                     # print('final_points', final_points)
                     kuan = abs(final_points[0][0] - final_points[1][0])
                     gao = abs(final_points[0][1] - final_points[1][1])
                     # print(url.split('/')[-1].split('.')[0])
                     # print(re.sub(r'(?<=_0)_\d{10}', '', '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt')
-                    with open(result_dir+'/'+re.sub(r'(?<=_0)_\d{10}', '', '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt', newline='', mode='a') as file:
+                    with open(result_dir + '/' + re.sub(r'(?<=_0)_\d{10}', '',
+                                                        '.'.join(url.split('/')[-1].split('.')[:-1])) + '.txt',
+                              newline='', mode='a', encoding='utf8') as file:
                         file.write(str(z) + ' ')
                         file.write(str(round((final_points[0][0] + final_points[1][0]) / 2 / size[0], 12)) + ' ')
                         file.write(str(round((final_points[0][1] + final_points[1][1]) / 2 / size[1], 12)) + ' ')
@@ -182,10 +192,17 @@ def newfunc(path):
                         file.write(str(round((gao) / size[1], 12)))
                         file.write('\n')
         print('error count is ', c)
+
+
 # for ele in os.listdir('/Users/mac/Desktop'):
 #     print(ele)
 #     if not ele.endswith('.csv'):
 #         continue
 #     print(ele)
-# newfunc('/Users/mac/Desktop/总.csv')
-print(len(os.listdir('总')))
+newfunc(r'C:\Users\hsc\Desktop\总.csv')
+# print(len(os.listdir('总')))
+
+# chucuo = "[{'<父标签0>头 ': {'anno': [{'x': 495.0000000000002, 'y': 230.28571428571433}, {'x': 540.6666666666667, 'y': 230.28571428571433}, {'x': 495.0000000000002, 'y': 274.33333333333326}, {'x': 540.6666666666667, 'y': 274.33333333333326}], 'attr': {'<父标签0>头 ': {}}}}, {'<父标签10>脚': {'anno': [{'x': 388.42857142857144, 'y': 223.66666666666663}, {'x': 434.7142857142858, 'y': 223.66666666666663}, {'x': 388.42857142857144, 'y': 260.0000000000001}, {'x': 434.7142857142858, 'y': 260.0000000000001}], 'attr': {'<父标签10>脚': {}}}}, {'<父标签2>←、左、西': {'anno': [{'x': 388.33333333333337, 'y': 210.03968253968253}, {'x': 541, 'y': 210.03968253968253}, {'x': 388.33333333333337, 'y': 284.99999999999994}, {'x': 541, 'y': 284.99999999999994}], 'attr': {'<父标签2>←、左、西': {}}}}, {'<父标签10>脚': {'anno': [{'x': 49.227777777777646, 'y': 389.63968253968255}, {'x': 61.427777777777635, 'y': 389.63968253968255}, {'x': 49.227777777777646, 'y': 408.63968253968255}, {'x': 61.427777777777635, 'y': 408.63968253968255}], 'attr': {'<父标签10>脚': {}}}}, {'<父标签0>头 ': {'anno': [{'x': 23.227777777777632, 'y': 464.03968253968253}, {'x': 45.22777777777763, 'y': 464.03968253968253}, {'x': 23.227777777777632, 'y': 480.76666666666654}, {'x': 45.22777777777763, 'y': 480.76666666666654}], 'attr': {'<父标签0>头 ': {}}}}, {'<父标签5>↗、右上、东北': {'anno': [{'x': 22.89999999999995, 'y': 389.2396825396826}, {'x': 69.62777777777764, 'y': 389.2396825396826}, {'x': 22.89999999999995, 'y': 480.76666666666654}, {'x': 69.62777777777764, 'y': 480.76666666666654}], 'attr': {'<父标签5>↗、右上、东北': {}}}}]"
+# for ele in eval(chucuo):
+#     for key, value in ele.items():
+#         print(key, value)
