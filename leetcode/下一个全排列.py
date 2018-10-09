@@ -29,15 +29,17 @@ class Solution:
                 tmp = i
                 print('i is {}, tmp is {}'.format(i, tmp))
                 break
+        # 这个for else用着很有意思
+        # 就是没有for循环中的没有break的时候，else里面的语句才会执行
         else:
-            # 没有这个索引，就说明nums是根据大小逆序排列的，然后逆序回来即可
+            # 没有这个索引，就说明nums是根据从大到小排列的，然后逆序即可
             left, right = 0, len(nums) - 1
             while left < right:
                 nums[left], nums[right] = nums[right], nums[left]
                 left += 1
                 right -= 1
             return
-        # 找到索引i之后的大于这个值得最小值，然后进行替换
+        # 找到索引i(这个i是指前面的for循环中逆序遍历的时候寻找的i，也就是tmp-1)之后的大于这个值得最小值，然后进行替换
         for i in range(len(nums) - 1, tmp - 1, -1):
             print("i is {}".format(i))
             if nums[i] > nums[tmp - 1]:
