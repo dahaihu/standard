@@ -22,7 +22,6 @@ class Solution:
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
-        tmp = 0
         # 逆序遍历， 只到索引为1的, 找到一个索引，这个索引i指向的元素值大于索引i-1所指向的元素值
         for i in range(len(nums) - 1, 0, -1):
             print("i is {}".format(i))
