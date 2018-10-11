@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5ccaaae-c6f0-45c1-a3cc-d3b0b7017a0b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/leetcode/买股票的最佳时机.py" beforeDir="false" afterPath="$PROJECT_DIR$/leetcode/买股票的最佳时机.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,36 +174,38 @@
           <entry key="project.open.time.5" value="3" />
           <entry key="project.open.time.6" value="6" />
           <entry key="project.open.time.7" value="3" />
-          <entry key="project.open.time.8" value="7" />
+          <entry key="project.open.time.8" value="8" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="25" />
+          <entry key="project.opened" value="26" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="actor" value="1" />
+          <entry key="actor" value="2" />
+          <entry key="address" value="1" />
           <entry key="country" value="1" />
           <entry key="csv" value="1" />
           <entry key="customer" value="1" />
           <entry key="customers" value="4" />
           <entry key="env" value="1" />
-          <entry key="film" value="1" />
+          <entry key="film" value="2" />
+          <entry key="film_actor" value="1" />
           <entry key="inventory" value="2" />
           <entry key="orderitems" value="3" />
           <entry key="orders" value="5" />
           <entry key="populate" value="1" />
           <entry key="products" value="2" />
-          <entry key="py" value="54" />
-          <entry key="sql" value="8" />
+          <entry key="py" value="55" />
+          <entry key="sql" value="9" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Database Element" value="21" />
+          <entry key="Database Element" value="25" />
           <entry key="PLAIN_TEXT" value="3" />
-          <entry key="Python" value="54" />
-          <entry key="Scratch" value="8" />
+          <entry key="Python" value="55" />
+          <entry key="Scratch" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -211,8 +213,8 @@
           <entry key="Python Console" value="1089" />
           <entry key="dummy" value="2" />
           <entry key="env" value="30" />
-          <entry key="py" value="11738" />
-          <entry key="sql" value="2874" />
+          <entry key="py" value="12189" />
+          <entry key="sql" value="4327" />
           <entry key="txt" value="26" />
           <entry key="快排" value="187" />
           <entry key="集合" value="1" />
@@ -221,8 +223,8 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="58" />
-          <entry key="Python" value="13015" />
-          <entry key="Scratch" value="2874" />
+          <entry key="Python" value="13466" />
+          <entry key="Scratch" value="4327" />
         </counts>
       </usages-collector>
     </session>
@@ -232,69 +234,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/inventory">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/37d4d5ca-b1d5-403a-ac13-ad07d29d9ac3/console.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/leetcode/买股票的最佳时机.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-82">
-              <caret selection-end-line="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/algorithm/火车编组.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="551">
-              <caret line="29" selection-start-line="29" selection-end-line="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/leetcode/归并排序.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="228">
+              <caret line="15" column="29" lean-forward="true" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
               <folding>
-                <marker date="1539175774421" expanded="true" signature="38:43" ph="..." />
-                <marker date="1539175774421" expanded="true" signature="307:312" ph="..." />
+                <marker date="1539236813115" expanded="true" signature="842:847" ph="..." />
+                <marker date="1539236813115" expanded="true" signature="1040:1289" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/ddfaaee7-7829-43af-a4c3-d0714d7e921a/console.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="59" selection-start-line="7" selection-start-column="59" selection-end-line="7" selection-end-column="59" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/actor">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
             </state>
           </provider>
         </entry>
@@ -376,10 +324,10 @@
         <option value="$PROJECT_DIR$/leetcode/第k个排列.py" />
         <option value="$PROJECT_DIR$/leetcode/堆排序.py" />
         <option value="$PROJECT_DIR$/algorithm/美丽值.py" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/ddfaaee7-7829-43af-a4c3-d0714d7e921a/console.sql" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/37d4d5ca-b1d5-403a-ac13-ad07d29d9ac3/console.sql" />
         <option value="$PROJECT_DIR$/algorithm/火车编组.py" />
         <option value="$PROJECT_DIR$/leetcode/归并排序.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/ddfaaee7-7829-43af-a4c3-d0714d7e921a/console.sql" />
         <option value="$PROJECT_DIR$/leetcode/买股票的最佳时机.py" />
       </list>
     </option>
@@ -407,6 +355,22 @@
       <foldersAlwaysOnTop value="false" />
     </navigator>
     <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="standard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="standard" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="standard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="standard" type="462c0819:PsiDirectoryNode" />
+              <item name="leetcode" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scope">
         <subPane subId="Scope 'Changed Files'; set:Changed Files; ALL; class com.intellij.packageDependencies.ChangeListScope">
           <expand>
@@ -436,22 +400,6 @@
             <path>
               <item name="standard" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="standard" type="b2602c69:ProjectViewProjectNode" />
-              <item name="standard" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="standard" type="b2602c69:ProjectViewProjectNode" />
-              <item name="standard" type="462c0819:PsiDirectoryNode" />
-              <item name="leetcode" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -494,7 +442,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.集合">
+  <component name="RunManager" selected="Python.买股票的最佳时机">
     <configuration name="集合" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="standard" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -509,6 +457,132 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/leetcode/集合.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="买股票的最佳时机" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="standard" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/leetcode" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/leetcode/买股票的最佳时机.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="连续整数中部分和为一个特定的数" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="standard" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/leetcode" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/leetcode/连续整数中部分和为一个特定的数.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="转化数据的格式" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="standard" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/转化数据的格式.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="美丽值" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="standard" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/algorithm" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithm/美丽值.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="整数反转" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="standard" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/leetcode" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/leetcode/整数反转.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="转化数据的格式" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="standard" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/转化数据的格式.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -672,113 +746,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="连续整数中部分和为一个特定的数" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="standard" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/leetcode" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/leetcode/连续整数中部分和为一个特定的数.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="转化数据的格式" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="standard" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/转化数据的格式.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="美丽值" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="standard" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/algorithm" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithm/美丽值.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="整数反转" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="standard" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/leetcode" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/leetcode/整数反转.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="转化数据的格式" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="standard" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/转化数据的格式.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="standard" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -826,9 +793,11 @@
     <list>
       <item itemvalue="Python.集合" />
       <item itemvalue="Python.第k个排列" />
+      <item itemvalue="Python.买股票的最佳时机" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.买股票的最佳时机" />
         <item itemvalue="Python.第k个排列" />
         <item itemvalue="Python.集合" />
       </list>
@@ -849,10 +818,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1513" height="973" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info x="636" y="72" width="262" height="817" id="Structure" order="0" side_tool="true" type="WINDOWED" weight="0.15738831" />
       <window_info id="Favorites" order="1" side_tool="true" weight="0.3298969" />
-      <window_info content_ui="combo" x="1" y="140" width="574" height="654" id="Project" order="2" visible="true" weight="0.24467354" />
+      <window_info active="true" content_ui="combo" x="1" y="140" width="574" height="654" id="Project" order="2" visible="true" weight="0.24810997" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32961586" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.41982865" />
@@ -865,7 +835,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.32961586" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5003436" side_tool="true" weight="0.45065397" />
       <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49965635" weight="0.35373318" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="12" visible="true" weight="0.41126072" />
+      <window_info anchor="bottom" id="Python Console" order="12" visible="true" weight="0.4100367" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.41860464" />
       <window_info anchor="bottom" id="SQL Generator" order="14" weight="0.32925338" />
       <window_info anchor="right" x="0" y="0" width="328" height="773" id="Documentation" order="0" side_tool="true" visible="true" weight="0.3298969" />
@@ -873,7 +843,7 @@
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.24948454" />
       <window_info anchor="right" id="SciView" order="4" />
-      <window_info anchor="right" id="Database" order="5" visible="true" weight="0.21786942" />
+      <window_info anchor="right" id="Database" order="5" weight="0.21786942" />
     </layout>
     <layout-to-restore>
       <window_info x="636" y="72" width="262" height="817" id="Structure" order="0" side_tool="true" type="WINDOWED" weight="0.15738831" />
@@ -909,20 +879,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/studing/flaskStuding/传入数据到sqlite.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="354" column="32" selection-start-line="354" selection-start-column="32" selection-end-line="354" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/leetcode/全排列.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/leetcode/反转列表.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
@@ -1181,13 +1137,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/film">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
     <entry file="das://37d4d5ca-b1d5-403a-ac13-ad07d29d9ac3/schema/bizhibihui/table/products">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
@@ -1209,17 +1158,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/ddfaaee7-7829-43af-a4c3-d0714d7e921a/console.sql">
+    <entry file="file://$PROJECT_DIR$/algorithm/火车编组.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="59" selection-start-line="7" selection-start-column="59" selection-end-line="7" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/actor">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
+        <state relative-caret-position="551">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
         </state>
       </provider>
     </entry>
@@ -1234,17 +1176,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/algorithm/火车编组.py">
+    <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/film">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/address">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/film_actor">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://ddfaaee7-7829-43af-a4c3-d0714d7e921a/schema/sakila/table/actor">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/ddfaaee7-7829-43af-a4c3-d0714d7e921a/console.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
+        <state relative-caret-position="196">
+          <caret line="75" column="17" lean-forward="true" selection-start-line="75" selection-start-column="17" selection-end-line="75" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/leetcode/买股票的最佳时机.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-82">
-          <caret selection-end-line="1" />
+        <state relative-caret-position="228">
+          <caret line="15" column="29" lean-forward="true" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+          <folding>
+            <marker date="1539236813115" expanded="true" signature="842:847" ph="..." />
+            <marker date="1539236813115" expanded="true" signature="1040:1289" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
