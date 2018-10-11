@@ -38,5 +38,6 @@ def once(nums):
         dp[i] = max(nums[i] - tmp_min, dp[i - 1])
     return dp[-1]
 
+
 nums = [7, 1, 5, 3, 6, 4]
 print(once(nums))
