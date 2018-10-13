@@ -1,4 +1,4 @@
-def subSet(nums):
+def subSet1(nums):
     """
     通过二进制数的特性，求给定集合的子集
     :param nums:
@@ -6,14 +6,27 @@ def subSet(nums):
     """
     n = len(nums)
     res = []
+    # 可以把这个i当成二进制数看待
     for i in range(2 ** n):
-        cur = []
+        tmp = []
         for j in range(n):
-            if i & (2 ** j) == 2 ** j:
-                cur.append(nums[j])
-        res.append(cur)
+            if i & 2 ** j == 2 ** j:
+                tmp.append(nums[j])
+        res.append(tmp)
     return res
 
+
+def subSet2(nums):
+    res = [[]]
+    for ele in nums:
+        n = len(res)
+        for i in range(n):
+            res.append(res[i] + [ele])
+    return res
+
+
+print(subSet1([1, 2, 3, 4]))
+print(subSet2([1, 2, 3, 4]))
 
 def exchange(x, y):
     """
@@ -81,5 +94,5 @@ class Solution:
             return pow(2, 31) - 1
 
 
-s = Solution()
-print(s.divide(7, 3))
+# s = Solution()
+# print(s.divide(7, 3))
