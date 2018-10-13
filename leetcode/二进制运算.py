@@ -19,6 +19,10 @@ def subSet1(nums):
 def subSet2(nums):
     res = [[]]
     for ele in nums:
+        # 这种实现方式很有意思
+        # 既然不能边遍历，变添加
+        # 那么是不是可以通过索引对其遍历
+        # 然后进行添加呢
         n = len(res)
         for i in range(n):
             res.append(res[i] + [ele])

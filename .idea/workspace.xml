@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5ccaaae-c6f0-45c1-a3cc-d3b0b7017a0b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/leetcode/二进制运算.py" beforeDir="false" afterPath="$PROJECT_DIR$/leetcode/二进制运算.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -215,7 +214,7 @@
           <entry key="Python Console" value="1089" />
           <entry key="dummy" value="2" />
           <entry key="env" value="30" />
-          <entry key="py" value="13962" />
+          <entry key="py" value="14018" />
           <entry key="sql" value="4665" />
           <entry key="txt" value="26" />
           <entry key="全排列" value="45" />
@@ -226,7 +225,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="58" />
-          <entry key="Python" value="15284" />
+          <entry key="Python" value="15340" />
           <entry key="Scratch" value="4665" />
         </counts>
       </usages-collector>
@@ -279,10 +278,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/leetcode/二进制运算.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+            <state relative-caret-position="399">
+              <caret line="24" column="17" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
               <folding>
-                <marker date="1539391552505" expanded="true" signature="344:485" ph="..." />
+                <marker date="1539391787713" expanded="true" signature="344:572" ph="..." />
               </folding>
             </state>
           </provider>
@@ -990,8 +989,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.32961586" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5003436" side_tool="true" weight="0.45065397" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49965635" weight="0.35373318" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="12" visible="true" weight="0.4100367" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49965635" visible="true" weight="0.35373318" />
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.4100367" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.41860464" />
       <window_info anchor="bottom" id="SQL Generator" order="14" weight="0.32925338" />
       <window_info anchor="right" x="0" y="0" width="328" height="773" id="Documentation" order="0" side_tool="true" visible="true" weight="0.3298969" />
@@ -1377,10 +1376,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/leetcode/二进制运算.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+        <state relative-caret-position="399">
+          <caret line="24" column="17" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
           <folding>
-            <marker date="1539391552505" expanded="true" signature="344:485" ph="..." />
+            <marker date="1539391787713" expanded="true" signature="344:572" ph="..." />
           </folding>
         </state>
       </provider>
