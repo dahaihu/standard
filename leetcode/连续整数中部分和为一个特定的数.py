@@ -1,6 +1,8 @@
 """
 例如，n为6，那么就是[1, 2, 3, 4, 5, 6]中组合的和为m
 """
+
+
 def func(n, m):
     nums = [[0 for _ in range(m)] for _ in range(n)]
     # 为什么要在这个地方赋值呢？
@@ -15,10 +17,11 @@ def func(n, m):
             # 如果i>j，那么说明，i是不可能被包含的
             # 感觉这题，不管什么时候从头开始做的话，都是想不出来的
             if i > j:
-                nums[i][j] = nums[i-1][j]
+                nums[i][j] = nums[i - 1][j]
             else:
-                nums[i][j] = nums[i-1][j] + nums[i-1][j-i]
+                nums[i][j] = nums[i - 1][j] + nums[i - 1][j - i]
     for ele in nums:
         print(ele)
+
 
 func(6, 8)
