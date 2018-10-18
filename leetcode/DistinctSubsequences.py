@@ -63,6 +63,7 @@ class Solution:
         """
         mark = [[0 for _ in range(len(s) + 1)] for _ in range(len(t) + 1)]
         # 这个问题为什么会这样的初始化呢？
+        # 因为长度为0的串，在一个任意长度的串中都存在
         for i in range(len(s) + 1):
             mark[0][i] = 1
         print(mark)
