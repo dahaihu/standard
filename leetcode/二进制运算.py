@@ -32,6 +32,7 @@ def subSet2(nums):
 print(subSet1([1, 2, 3, 4]))
 print(subSet2([1, 2, 3, 4]))
 
+
 def exchange(x, y):
     """
     不用额外的空间交换两个变量的值
@@ -65,7 +66,7 @@ def exchange(x, y):
 
 被除数和除数均为 32 位有符号整数。
 除数不为 0。
-假设我们的环境只能存储 32 位有符号整数，其数值范围是 [−231,  231 − 1]。本题中，如果除法结果溢出，则返回 231 − 1"""
+假设我们的环境只能存储 32 位有符号整数，其数值范围是 [−2 ** 31,  2 ** 31 − 1]。本题中，如果除法结果溢出，则返回 2 ** 31 − 1"""
 
 
 class Solution:
@@ -96,7 +97,6 @@ class Solution:
             return res
         else:
             return pow(2, 31) - 1
-
 
 # s = Solution()
 # print(s.divide(7, 3))
