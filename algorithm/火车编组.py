@@ -25,5 +25,5 @@ def func():
             original.pop(0)
     return 'Yes'
 
-print(func())
 
+print(func())
