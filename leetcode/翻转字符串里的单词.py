@@ -12,6 +12,8 @@
 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
 进阶: 请选用C语言的用户尝试使用 O(1) 空间复杂度的原地解法。
 """
+
+
 class Solution(object):
     def reverseWords(self, s):
         """
@@ -40,6 +42,7 @@ class Solution(object):
                 continue
             right += 1
         return s
+
 
 s = Solution()
 print(s.reverseWords('the sky is blue'))

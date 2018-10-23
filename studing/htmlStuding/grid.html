@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .wrapper {
+            display: grid;
+            grid-template-columns: 100px 100px 100px;
+            grid-template-rows: 100px 100px 100px;
+        }
+        .item1{
+            grid-column-start:1;
+            grid-column-end:3;
+            background-color: #eeeeee;
+        }
+        .item2{
+            background-color: beige;
+        }
+        .item3{
+            grid-row-start: 2;
+            grid-row-end: 4;
+            background-color: #FFA500;
+        }
+        .item4{
+            grid-column-start: 2;
+            grid-column-end: 4;
+            background-color: aqua;
+        }
+        .item5{
+            background-color: bisque;
+        }
+        .item6{
+            background-color: #FFD700;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="item1">1</div>
+    <div class="item2">2</div>
+    <div class="item3">3</div>
+    <div class="item4">4</div>
+    <div class="item5">5</div>
+    <div class="item6">6</div>
+</div>
+
+</body>
+</html>
