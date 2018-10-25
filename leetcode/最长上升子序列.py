@@ -20,15 +20,17 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
+        if not nums:
+            return 0
         dp = [(nums[0], 1)]
-        for ele in nums[1:]:
-            tmp_mx = 1
-            for items in dp:
-                if items[0] >= ele:
-                    tmp_mx = max(items[1] + 1, tmp_mx)
-            dp.append((ele, tmp_mx))
+        for cur in nums[1:]:
+            tmp = 1
+            for ele in dp:
+                if cur > ele[0]:
+                    tmp = max(ele[1] + 1, tmp)
+            dp.append((cur, tmp))
         print(dp)
-        return max([ele[1] for ele in dp])
+        return max(ele[1] for ele in dp)
 
 
 nums = [10, 9, 2, 5, 3, 7, 101, 18]
