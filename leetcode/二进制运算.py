@@ -39,6 +39,11 @@ def opposite(num):
 
 # 取一个数的绝对值
 def absolute(num):
+    """
+    这个地方需要晓得的是 -1 和个数取异或运算就是取反
+    :param num:
+    :return:
+    """
     tmp = num >> 31
     # 这个地方不用括号是不行的
     # 不太懂异或的优先级

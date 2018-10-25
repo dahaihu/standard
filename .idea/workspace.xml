@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5ccaaae-c6f0-45c1-a3cc-d3b0b7017a0b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/algorithm/枪支.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/leetcode/二进制运算.py" beforeDir="false" afterPath="$PROJECT_DIR$/leetcode/二进制运算.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/studing/htmlStuding/margin.html" beforeDir="false" afterPath="$PROJECT_DIR$/studing/htmlStuding/margin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/studing/htmlStuding/列和内容断裂.html" beforeDir="false" afterPath="$PROJECT_DIR$/studing/htmlStuding/列和内容断裂.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -216,7 +212,7 @@
           <entry key="dummy" value="2" />
           <entry key="env" value="30" />
           <entry key="html" value="1792" />
-          <entry key="py" value="19906" />
+          <entry key="py" value="19949" />
           <entry key="sql" value="5358" />
           <entry key="txt" value="26" />
           <entry key="全排列" value="45" />
@@ -229,7 +225,7 @@
         <counts>
           <entry key="HTML" value="1792" />
           <entry key="PLAIN_TEXT" value="58" />
-          <entry key="Python" value="23014" />
+          <entry key="Python" value="23057" />
           <entry key="Scratch" value="5358" />
         </counts>
       </usages-collector>
@@ -302,11 +298,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/leetcode/二进制运算.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="43" column="15" selection-start-line="43" selection-start-column="15" selection-end-line="43" selection-end-column="15" />
+            <state relative-caret-position="285">
+              <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
               <folding>
-                <marker date="1540428108109" expanded="true" signature="716:910" ph="..." />
-                <marker date="1540428108109" expanded="true" signature="829:863" ph="..." />
+                <marker date="1540428499705" expanded="true" signature="792:986" ph="..." />
+                <marker date="1540428499705" expanded="true" signature="905:939" ph="..." />
               </folding>
             </state>
           </provider>
@@ -1191,8 +1187,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.32925338" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5010309" side_tool="true" weight="0.23133415" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49965635" weight="0.24235006" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="12" sideWeight="0.49896908" visible="true" weight="0.49816403" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49965635" visible="true" weight="0.2239902" />
+      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49896908" weight="0.49816403" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.41860464" />
       <window_info anchor="bottom" id="SQL Generator" order="14" weight="0.32925338" />
       <window_info anchor="right" x="0" y="0" width="328" height="773" id="Documentation" order="0" side_tool="true" visible="true" weight="0.3298969" />
@@ -1566,11 +1562,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/leetcode/二进制运算.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="43" column="15" selection-start-line="43" selection-start-column="15" selection-end-line="43" selection-end-column="15" />
+        <state relative-caret-position="285">
+          <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
           <folding>
-            <marker date="1540428108109" expanded="true" signature="716:910" ph="..." />
-            <marker date="1540428108109" expanded="true" signature="829:863" ph="..." />
+            <marker date="1540428499705" expanded="true" signature="792:986" ph="..." />
+            <marker date="1540428499705" expanded="true" signature="905:939" ph="..." />
           </folding>
         </state>
       </provider>
