@@ -29,8 +29,28 @@ def subSet2(nums):
     return res
 
 
-print(subSet1([1, 2, 3, 4]))
-print(subSet2([1, 2, 3, 4]))
+# print(subSet1([1, 2, 3, 4]))
+# print(subSet2([1, 2, 3, 4]))
+
+# 取一个数的相反数
+def opposite(num):
+    return ~num + 1
+
+
+# 取一个数的绝对值
+def absolute(num):
+    tmp = num >> 31
+    # 这个地方不用括号是不行的
+    # 不太懂异或的优先级
+    return (num ^ tmp) - tmp
+
+
+# 判断一个数是否是2的幂
+def mi(num):
+    return not num & (num - 1)
+
+
+print(f'-10\'s absolute is {absolute(-10)}')
 
 
 def exchange(x, y):
