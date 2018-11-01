@@ -23,6 +23,7 @@ class Solution:
             print("i is {}, mark[i] is {}".format(new_nums[i], mark[i]))
             if mark[i] + i > mxRight:
                 mxRight = mark[i] + 1
+                # 这个pos去掉，在leetcode上面的结果也是对的
                 pos = i
             if mx < mark[i]:
                 mx = mark[i]
