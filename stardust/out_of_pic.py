@@ -39,7 +39,7 @@ def out_of_pic(file):
 
                 # 这个部分是对长度做判断
                 if int(inner[1]) > size[0]:
-                    inner[1] = '480'
+                    inner[1] = str(size[0])
                     greater += 1
                     print('gotcha')
 
@@ -49,7 +49,7 @@ def out_of_pic(file):
                     print('gotcha')
 
                 if int(inner[3]) > size[0]:
-                    inner[3] = '480'
+                    inner[3] = str(size[0])
                     greater += 1
                     print('gotcha')
 
