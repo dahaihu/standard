@@ -15,4 +15,4 @@ c = countdown(5)
 for n in c:
     print(n)
     if n == 5:
-        print(c.send(3))
+        c.send(3)

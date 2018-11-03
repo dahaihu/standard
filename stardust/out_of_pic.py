@@ -6,7 +6,7 @@ greater = 0
 
 
 def out_of_pic(file):
-    pic_path = '/Users/mac/Downloads/1027bzgs'
+    pic_path = '/Users/mac/Downloads/img_20181026_five'
     global greater
     write_data = []
     wrong_data = []
@@ -64,8 +64,8 @@ def out_of_pic(file):
                 data[start:end] = inner
             write_single.extend(data)
             write_data.append(' '.join(write_single))
-    with open(f'{uploads_path}/right-{file}', 'w', encoding='utf8') as right, \
-            open(f'{uploads_path}/wrong-{file}', 'w', encoding='utf8') as wrong:
+    with open(f'/Users/mac/Desktop/right-{file}', 'w', encoding='utf8') as right, \
+            open(f'/Users/mac/Desktop//wrong-{file}', 'w', encoding='utf8') as wrong:
         for item in write_data:
             right.write(item + '\n')
         for item in wrong_data:
@@ -73,5 +73,5 @@ def out_of_pic(file):
 
 
 if __name__ == '__main__':
-    out_of_pic('right-5341.txt')
+    out_of_pic('five.txt')
     # print(greater)
