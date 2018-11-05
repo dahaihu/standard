@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>论坛管理系统</title>
+    <meta charset="utf8"/>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+    <script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.2/js/bootstrap.js"></script>
+    <link href="http://cdn.bootcss.com/twitter-bootstrap/3.0.2/css/bootstrap.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<!--页头-->
+<div class="header">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navar-header">
+            <a class="navbar-brand" href="#">论文管理系统</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="action"><a href="#">内容审核</a></li>
+                <li><a href="#">内容审核</a></li>
+                <li><a href="#">内容审核</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" role="search">
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="搜索">
+                    </div>
+                    <button type="submit" class="btn btn-default hidden">Submit</button>
+                </form>
+                <li><a href="#">未读消息 <span class="badge">5</span></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin_one
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">我删除的条目</a></li>
+                        <li><a href="#">我修改的条目</a></li>
+                        <li><a href="#">我恢复的条目</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">注销</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <!--左侧目录-->
+            <div class="col-md-2">
+                <div class="list-group">
+                    <a href="#" class="list-group-item active">主贴审核</a>
+                    <a href="#" class="list-group-item">回复审核</a>
+                    <a href="#" class="list-group-item">用户管理</a>
+                    <a href="#" class="list-group-item">版主审核</a>
+                    <a href="#" class="list-group-item">主贴审核日志</a>
+                    <a href="#" class="list-group-item">回复审核日志</a>
+                    <a href="#" class="list-group-item">用户管理日志</a>
+                </div>
+            </div>
+            <!--右侧主要内容-->
+            <div class="col-md-10">
+                <div class="panel panel-default">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>主贴审核</h4>
+                            <div class="form-group">
+                                <span>全选 <input type="checkbox"/></span>
+                                <button class="btn btn-success">通过</button>
+                                <button class="btn btn-primary">恢复</button>
+                                <button class="btn btn-danger">删除</button>
+                                <ul class="pagination visible-md visible-lg visible-sm" id="page-right">
+                                    <li><a href="#">&laquo;</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#">&raquo;</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

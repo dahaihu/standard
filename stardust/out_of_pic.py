@@ -6,7 +6,7 @@ greater = 0
 
 
 def out_of_pic(file):
-    pic_path = '/Users/mac/Downloads/img_20181026_five'
+    pic_path = '/Users/mac/Downloads/img_20181026_fist'
     global greater
     write_data = []
     wrong_data = []
@@ -73,5 +73,5 @@ def out_of_pic(file):
 
 
 if __name__ == '__main__':
-    out_of_pic('five.txt')
+    out_of_pic('fist.txt')
     # print(greater)

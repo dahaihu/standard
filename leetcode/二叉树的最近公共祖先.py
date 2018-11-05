@@ -61,4 +61,5 @@ class Solution:
         # tmpright = self.help(root.right, node, tmp)
         # if tmpright:
         #     return tmpright
+        # return None
         return self.help(root.left, node, tmp) or self.help(root.right, node, tmp)
