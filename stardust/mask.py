@@ -17,32 +17,24 @@ def draw_point(img, point_list):
     draw = ImageDraw.Draw(mask, mode='RGBA')
 
     # point_list = point_list['point']
+    for d in point_list:
+        if '<父标签0>身体轮廓' in d:
+            points = d['<父标签0>身体轮廓'].get('anno')
+            points = [(point.get('x'), point.get('y')) for point in points]
+            # 多边形填充颜色
+            fill = list(ImageColor.getcolor('WHITE', 'RGBA'))
+            # 画出多边形
+            draw.polygon(points, fill=tuple(fill), outline='BLACK')
 
-    res = dict()
-    for ele in point_list:
-        res.update(ele)
-    print('res is {}'.format(res))
-    points = res.pop('<父标签0>轮廓').get('anno')
-    points = [(point.get('x'), point.get('y')) for point in points]
-    # 多边形填充颜色
-    fill = list(ImageColor.getcolor('WHITE', 'RGBA'))
-    # 画出多边形
-    draw.polygon(points, fill=tuple(fill), outline='BLACK')
-
-    # mask.show()
-
-    points = res.get('<父标签1>缝隙')
-    if not points:
-        name = img[:-4] + '-mask.jpg'
-        mask.save(os.path.join(os.getcwd(), name), 'PNG')
-        mask.close()
-        return
-    print('point is {}'.format(points))
-    points = [(point.get('x'), point.get('y')) for point in points.get('anno')]
-    # 多边形填充颜色
-    fill = list(ImageColor.getcolor('BLACK', 'RGBA'))
-    # 画出多边形
-    draw.polygon(points, fill=tuple(fill), outline='BLACK')
+        # mask.show()
+        elif '<父标签1>缝隙' in d:
+            points = d.get('<父标签1>缝隙')
+            print('point is {}'.format(points))
+            points = [(point.get('x'), point.get('y')) for point in points.get('anno')]
+            # 多边形填充颜色
+            fill = list(ImageColor.getcolor('BLACK', 'RGBA'))
+            # 画出多边形
+            draw.polygon(points, fill=tuple(fill), outline='BLACK')
 
     name = img[:-4] + '-mask.jpg'
     mask.save(os.path.join(os.getcwd(), name), 'PNG')
@@ -80,5 +72,5 @@ def batch(file):
 
 
 if __name__ == '__main__':
-    batch("/Users/mac/Desktop/Siri123321_1124_1541487179.csv")
+    batch("/Users/mac/Desktop/云测皮肤标注项目_266_1541755882.csv")
     print(error)
