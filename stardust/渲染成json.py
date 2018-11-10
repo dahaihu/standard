@@ -63,8 +63,8 @@ def batch(file_path):
                     tmp_dict['labeled'] = False
 
             print('resulf path is {}'.format(os.path.dirname(file_path) + '/result.txt'))
-            with open(os.path.dirname(file_path) + '/result.txt', 'a') as file:
+            with open(os.path.dirname(file_path) + '/result{}.txt'.format(file_path.split('/')[-1]), 'a') as file:
                 file.write(json.dumps(tmp_dict) + '\n')
 
 
-batch('/Users/mac/Desktop/tmp/Siri-导出测试_273_1541755531.csv')
+batch('/Users/mac/Desktop/tmp/Siri-14kkk_278_1541768325.csv')
