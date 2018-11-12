@@ -29,39 +29,20 @@
      因此，当 n = 0 时，其格雷编码序列为 [0]。
 """
 
+
 class Solution(object):
+
     def grayCode(self, n):
         """
         :type n: int
         :rtype: List[int]
         """
         res = [0]
-        if n == 1:
-            return res
-        # 长度
-        for i in range(1, n + 1):
-            tag = (-1) ** i
-            # 从右往左
-            if tag == -1:
-                # 起点
-                tmp_res = []
-                for j in range(n - i + 1):
-                    tmp = 0
-                    for cur in range(i):
-                        tmp += 2 ** (j + cur)
-                    tmp_res.append(tmp)
-                res.extend(tmp_res)
-            # 从左往右
-            else:
-                tmp_res = []
-                for j in range(n-1, i - 1 - 1, -1):
-                    tmp = 0
-                    for cur in range(i):
-                        tmp += 2 ** (j - cur)
-                    tmp_res.append(tmp)
-                res.extend(tmp_res)
+        for i in range(n):
+            res += [pow(2, i) + ele for ele in reversed(res)]
         return res
 
+
 s = Solution()
-for ele in s.grayCode(2):
+for ele in s.grayCode(3):
     print(bin(ele))
