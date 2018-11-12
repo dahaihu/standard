@@ -4,11 +4,12 @@ import io
 import json
 from PIL import Image
 import os
+import re
 
 mark = {'起立', '举手', '趴桌', '扭头'}
 
 
-def batch(file_path):
+def batch(file_path, path):
     # 通过 uft8 进行解码
     with open(file_path, 'r', encoding='utf8') as f:
         read = csv.reader(f)
@@ -22,15 +23,17 @@ def batch(file_path):
             img_url = eval(line[1])['image_url']
             # 获取图片的名字
             img_name = img_url.split('/')[-1]
+            img_name = re.sub(r'_\d{10}', '', img_name)
+            print("img_name is {}".format(img_name))
 
             # 获取文件的大小
             content = requests.get(img_url).content
             img = Image.open(io.BytesIO(content))
             # answer 的数据， 这个point_list是一个列表，里面的元素是字典
             point_list = eval(line[2])
-            tmp_dict = {"path": "D:\\项目管理\\智慧课堂项目-试标中\\家瑞标注结果-1107-6张\\img_0000548.jpg",
+            tmp_dict = {"path": "{}\{}".format(path, img_name),
                         "outputs": {"object":
-                                    []},
+                                        []},
                         "labeled": True,
                         "size": {
                             "width": img.size[0],
@@ -63,8 +66,9 @@ def batch(file_path):
                     tmp_dict['labeled'] = False
 
             print('resulf path is {}'.format(os.path.dirname(file_path) + '/result.txt'))
-            with open(os.path.dirname(file_path) + '/result{}.txt'.format(file_path.split('/')[-1]), 'a') as file:
+            with open(os.path.dirname(file_path) + '/result{}.txt'.format(file_path.split('/')[-1].split('.')[0]),
+                      'a') as file:
                 file.write(json.dumps(tmp_dict) + '\n')
 
 
-batch('/Users/mac/Desktop/tmp/Siri-14kkk_278_1541768325.csv')
+batch('/Users/mac/Desktop/tmp/Log2_283_1541996712.csv', 'trail_honghe\LogiCapture_profile2')

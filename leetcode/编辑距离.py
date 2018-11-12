@@ -20,6 +20,7 @@ class Solution:
                     mark[i][j] = 1 + min(mark[i - 1][j - 1], mark[i - 1][j], mark[i][j - 1])
         return mark[-1][-1]
 
+
 word1 = 'horse'
 word2 = 'ros'
 s = Solution()
