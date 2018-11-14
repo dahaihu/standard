@@ -24,6 +24,8 @@ def draw_point(img, point_list, res_path):
     for ind, d in enumerate(point_list):
         if '<父标签0>身体轮廓' in d:
             points = d['<父标签0>身体轮廓'].get('anno')
+            if not points:
+                continue
             points = [(point.get('x'), point.get('y')) for point in points]
             # 多边形填充颜色
             fill = list(ImageColor.getcolor('WHITE', 'RGBA'))
@@ -36,6 +38,8 @@ def draw_point(img, point_list, res_path):
         elif '<父标签1>缝隙' in d:
             points = d.get('<父标签1>缝隙')
             print('point is {}'.format(points))
+            if not points.get('anno'):
+                continue
             points = [(point.get('x'), point.get('y')) for point in points.get('anno')]
             # 多边形填充颜色
             fill = list(ImageColor.getcolor('BLACK', 'RGBA'))
@@ -84,9 +88,10 @@ def batch(file_path):
 
             def func(ele):
                 if '<父标签0>身体轮廓' in ele:
-                    return '<父标签0>身体轮廓'
+                    return mark_dict['<父标签0>身体轮廓']
                 elif '<父标签1>缝隙' in ele:
-                    return '<父标签1>缝隙'
+                    return mark_dict['<父标签1>缝隙']
+                return 10000
 
             point_list = sorted(point_list, key=func)
 
@@ -101,5 +106,5 @@ def batch(file_path):
 
 
 if __name__ == '__main__':
-    batch("/Users/mac/Desktop/tmp/1113pf测试_308_1542081348.csv")
+    batch("/Users/mac/Desktop/tmp/pf _256_1541680449.csv")
     print(error)
