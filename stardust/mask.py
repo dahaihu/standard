@@ -23,16 +23,16 @@ def draw_point(img, point_list, res_path):
 
     for ind, d in enumerate(point_list):
         if '<父标签0>身体轮廓' in d:
-            points = d['<父标签0>身体轮廓'].get('anno')
+            points = d['<父标签0>身体轮廓']
             if not points:
                 continue
-            points = [(point.get('x'), point.get('y')) for point in points]
+            points = [(point.get('x'), point.get('y')) for point in points.get('anno')]
             # 多边形填充颜色
             fill = list(ImageColor.getcolor('WHITE', 'RGBA'))
             # # 多边形填充颜色
             # fill = list(ImageColor.getcolor(colors[ind % 7], 'RGBA'))
             # 画出多边形
-            draw.polygon(points, fill=tuple(fill), outline='BLACK')
+            draw.polygon(points, fill=tuple(fill))
 
         # mask.show()
         elif '<父标签1>缝隙' in d:
@@ -46,7 +46,7 @@ def draw_point(img, point_list, res_path):
             # # 多边形填充颜色
             # fill = list(ImageColor.getcolor(colors[ind % 7], 'RGBA'))
             # 画出多边形
-            draw.polygon(points, fill=tuple(fill), outline='BLACK')
+            draw.polygon(points, fill=tuple(fill))
 
     name = img[:-4] + '-mask.jpg'
     mask.save(os.path.join(res_path, name), 'PNG')
