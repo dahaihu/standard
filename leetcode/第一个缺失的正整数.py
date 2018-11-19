@@ -4,6 +4,10 @@ class Solution:
     # 例如 如果数组中存在3 那么我们可不可以nums[3] = 3呢？
     # 这样最后的结果会不会和 [0, 1, 2, 3, 4, 5,,,]吗
     # 然后对这个数组从1开始遍历不就好了吗
+    """
+    这个其实可以用来解决好多问题，
+    例如，多次出现的数字
+    """
     def firstMissingPositive(self, nums):
         nums.append(0)
         n = len(nums)
