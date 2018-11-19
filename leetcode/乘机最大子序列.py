@@ -34,6 +34,11 @@ class Solution:
         return mx
 
     def standard(self, nums):
+        """
+        这个是标准解析
+        :param nums:
+        :return:
+        """
         premx = premn = mx = nums[0]
         for ele in nums[1:]:
             if ele < 0:
