@@ -1,0 +1,19 @@
+<annotation>
+    <folder/>
+    <filename>./huawei_second_data/data_public/multi_scale_results_public/bb_tj_0.4_0.2/weblmtImage 010.txt</filename>
+    <size>
+        <width>0</width>
+        <height>0</height>
+        <depth>0</depth>
+    </size>
+    <object>
+        <difficult>difficult</difficult>
+        <name>name</name>
+        <bndbox>
+            <xmin>1</xmin>
+            <ymin>2</ymin>
+            <xmax>3</xmax>
+            <ymax>4</ymax>
+        </bndbox>
+    </object>
+</annotation>
