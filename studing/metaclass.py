@@ -2,6 +2,11 @@ def say_hello(self):
     print("hello 啊")
 
 
+# 这个是flask中常用的创建父类的方法
+def with_metaclass(meta, base=object):
+    return meta("NewBase", (base,), {})
+
+
 class A(type):
     # 需要注意的是元类的new方法的第一个参数是什么
     # 似乎只能通过new方法来修改attrs
@@ -15,6 +20,15 @@ class A(type):
     def __init__(cls, name, bases, attrs):
         print("__init__ attrs are ", attrs)
         super().__init__(name, bases, attrs)
+
+
+class B(with_metaclass(A)):
+    pass
+
+
+def test_with_metaclass():
+    b = B()
+    b.say_hello()
 
 
 class Singleton(type):
