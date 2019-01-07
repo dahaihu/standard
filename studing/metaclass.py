@@ -2,6 +2,10 @@ def say_hello(self):
     print("hello 啊")
 
 
+def say_init(self):
+    print("我日了狗了")
+
+
 # 这个是flask中常用的创建父类的方法
 def with_metaclass(meta, base=object):
     return meta("NewBase", (base,), {})
@@ -18,17 +22,31 @@ class A(type):
         return super().__new__(mcs, name, bases, attrs)
 
     def __init__(cls, name, bases, attrs):
+        # 在__init__方法里面，更新attrs，并没有卵用
+        # 应该就是只能在__new__方法里面，修改attr
         print("__init__ attrs are ", attrs)
+        attrs['init'] = say_init
+        print("__init__ attrs are updated : {}".format(attrs))
+        print(type(attrs))
+        print(cls.__dict__)
         super().__init__(name, bases, attrs)
 
 
-class B(with_metaclass(A)):
+C = with_metaclass(A)
+print('C.__name__ is {}'.format(C.__name__))
+
+
+class B(C):
     pass
 
 
 def test_with_metaclass():
     b = B()
     b.say_hello()
+    c = C()
+    c.say_hello()
+
+
 
 
 class Singleton(type):
@@ -47,14 +65,3 @@ class Singleton(type):
 class B(metaclass=Singleton):
     def __init__(self):
         print("init is being called")
-
-
-def __init__(self):
-    self.message = "Hello world"
-
-
-attrs = {"__init__": __init__}
-
-Hello = A("Hello", (object,), attrs)
-h = Hello()
-h.say_hello()
