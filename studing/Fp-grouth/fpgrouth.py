@@ -1,5 +1,6 @@
 """
 如何在一棵树上，挖掘频繁一项集，二项集，三项集等等
+条件模式基：是以所查找元素项为结尾的路径集合，表示的是所查找的元素项与树根节点之间的所有内容。
 """
 
 class treeNode:
@@ -32,10 +33,10 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
     # 第二项用来当指针，用来指向构建的树种，与该节点的nameValue相同的节点
     headerTable = {}
     # go over dataSet twice 遍历两遍数据库
+    # 第一遍，统计频繁项出现的频次
     for trans in dataSet:  # first pass counts frequency of occurance
         for item in trans:
-            headerTable[item] = headerTable.get(item, 0) + dataSet[
-                trans]  # 这个dataSet[trans] 有点让人摸不着头脑   传入的dataset是不是经过处理的。
+            headerTable[item] = headerTable.get(item, 0) + dataSet[trans]  # 这个dataSet[trans] 有点让人摸不着头脑   传入的dataset是不是经过处理的。
 
     # 字典不能边遍历，边删除吗？对的，字典是不能遍历的同事进行删除的
 
@@ -46,6 +47,7 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
     # 这个用filter会失败的，filter似乎只能滤除列表？？？？？反正是不能用来滤除字典的(如果把字典当成iterable对象来看的话，里面返回的是全部键)
     # filter可以滤除任何iterable对象
     # headerTable=filter(lambda x:headerTable[x]>=minSup,headerTable)
+    # 将出现频次小于最低支持度的频繁项给删除
     s = set(headerTable.keys())
     for ind in s:
         if headerTable[ind] < minSup:
@@ -62,13 +64,19 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
     # treeNode的三个参数，名字，数量，父节点
     # 现在开始建树了
     retTree = treeNode('Null Set', 1, None)  # create tree
+    # 第二遍过滤数据库，建树
     for tranSet, count in dataSet.items():  # go through dataset 2nd time 一猜就知道dataSet是经过处理的数据集合
         # tranSet是指事务，count是指当前事务的频次
         # 对每个事务进行处理，然后添加到树中去
+        # localD是用来对当前事务进行处理
+        # 统计当前事务中每个频繁项出现的频次
+        # 对超过最小支持度的频繁项，通过从大到小的排序方式
+        # 整理成orderedItems
         localD = {}  # 这个是用来干什么的？？？用来获取当前事务中所含的频繁项集
         for item in tranSet:  # put transaction items in order
             if item in freqItemSet:
                 localD[item] = headerTable[item][0]
+        # localD用来存放该事务记录中，每个频繁项的频次
         if len(localD) > 0:
             # 对频繁项按照出现的次数进行从大到小的排序
             orderedItems = [v[0] for v in sorted(localD.items(), key=lambda p: p[1], reverse=True)]
@@ -82,35 +90,37 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
 # 这个headerTable是inTree的对应
 # 那么这个count指的是什么呢?
 # 当前节点出现的频次
+# 这个updateTree还是个递归，牛逼？？？
+# 每个inTree都是一棵树，有孩子节点，有父节点，有出现的频次
 def updateTree(items, inTree, headerTable, count):
     # 如果items[0]在当前节点的孩子之中的话
     if items[0] in inTree.children:  # check if orderedItems[0] in retTree.children
-        inTree.children[items[0]].inc(count)  # incrament count
+        inTree.children[items[0]].inc(count)  # increment count
     # 如果items[0]不在当前节点的孩子当中
     else:  # add items[0] to inTree.children
 
         inTree.children[items[0]] = treeNode(items[0], count, inTree)
 
         # 如果添加到当前树的节点，没有headerTable中的链接，则添加到其中
-        if headerTable[items[0]][1] == None:  # update header table
+        if headerTable[items[0]][1] is None:  # update header table
             headerTable[items[0]][1] = inTree.children[items[0]]
-
         # 如果有的话，则需要更新headTable，那么是如何更新这个headerTable的呢？
+        # 一个个便利，直到找到最后一个，然后进行连接
         else:
             updateHeader(headerTable[items[0]][1], inTree.children[items[0]])
     # 由于item[0]已经添加到树中，如果item的长度等于1，那么不需要往下添加了
     if len(items) > 1:  # call updateTree() with remaining ordered items
-        updateTree(items[1::], inTree.children[items[0]], headerTable, count)
+        updateTree(items[1:], inTree.children[items[0]], headerTable, count)
 
 
 def updateHeader(nodeToTest, targetNode):  # this version does not use recursion
-
     while (nodeToTest.nodeLink != None):  # Do not use recursion to traverse a linked list! 为什么不要通过递归遍历一个链表
         nodeToTest = nodeToTest.nodeLink
     nodeToTest.nodeLink = targetNode
 
 
 # 找节点的前缀，把当前节点包含在prefixPath之中的，这个后面会有提醒，需要注意的
+# 这个和下面的findPrefixPath是什么关系呢？
 def ascendTree(leafNode, prefixPath):  # ascends from leaf node to root
     if leafNode.parent != None:
         prefixPath.append(leafNode.name)
@@ -132,7 +142,15 @@ def ascendTree(leafNode, prefixPath):  # ascends from leaf node to root
 #    c2
 # 如果传入C节点，那么返回的就是{frozenset(a,b):2,frozenset(a):4}
 # 这个传入的basePat是干嘛用的呢？
-def findPrefixPath(basePat, treeNode):  # treeNode comes from header table treeNode是来自headerTable的
+"""
+这个傻逼的basePat是用来干嘛的
+这个函数是用来找条件模式基的
+然后基于这些条件模式基来构建一个新的树
+找到输入的treeNode的条件模式基。。。。
+
+这个里面传入的basePat有个jbd用
+"""
+def findPrefixPath(basePat, treeNode):  # treeNode comes from header table 、treeNode是来自headerTable的
     condPats = {}
     # treeNode = headTable[basePat][1]
     while treeNode != None:
@@ -152,12 +170,21 @@ def findPrefixPath(basePat, treeNode):  # treeNode comes from header table treeN
 # 这个headerTable之前就存在吗？
 # 这个inTree和这个headerTable是相对应的
 # 这个preFix我觉得叫后缀更好
+"""
+代码似乎要写的好，写的精简，只能用递归
+而自己写递归的话，要注意的地方很多，截止条件，，，，，
+这个也是个递归
+"""
 def mineTree(inTree, headerTable, minSup, preFix, freqItemList):
     # 这个bigL是根据按照频繁项的频率从小到大排序的频繁项
     # 这个bigL是从headerTable中来的
     # 这个bigL的顺序，影响结果吗?
     print("headerTable is {}".format(headerTable))
     print("preFix is {}".format(preFix))
+    # 每mineTree一次都得对headerTable中的键按照频次从小到大排序一次的吗？
+    # 而且，这个headerTable也是不变得的吧？？？？？
+    # 这个地方sort一下有用吗？
+    # 从底部网上走，和乱序的走，有什么区别的吗
     bigL = [v[0] for v in sorted(headerTable.items(), key=lambda p: p[1][0])]  # (sort header table)
     print("bigL is {}".format(bigL))
     # 这个basePat是单个项
@@ -190,6 +217,7 @@ def loadSimpDat():
 
 
 # 这个createIniSet是不是有点不好。假如有的有多个相同的事务，那么该事物数是不是可以是大于1的，如果都是1，那么这么做有什么意义呢？
+# 看了上面这条评论，我是搞懂了，我之前是怎么的笨
 def createInitSet(dataSet):
     retDict = {}
     for trans in dataSet:
