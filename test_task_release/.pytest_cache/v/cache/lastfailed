@@ -1,6 +1,0 @@
-{
-  "test_task_release.py::test_my_json_response": true,
-  "test_task_release.py::test_task_release2": true,
-  "test_task_release.py::test_task_release3": true,
-  "test_task_release.py::test_task_release4": true
-}
