@@ -270,8 +270,9 @@ from collections import OrderedDict
 # 一个递归树
 # 每个child都是一个同样的SortedTree树
 class SortedTree:
-    def __init__(self, node, dataset=None):
+    def __init__(self, node, prefix, dataset=None):
         self.node = node
+        self.prefix = prefix
         self.support = 0
         self.children = []
         self.dataset = [] if not dataset else dataset
@@ -279,8 +280,8 @@ class SortedTree:
     def canLinked(self):
         return len(self.children) >= 2
 
-    def addChild(self, node):
-        self.children.append(SortedTree(node))
+    def addChild(self, node, prefix):
+        self.children.append(SortedTree(node, prefix))
 
     def addTransaction(self, transaction):
         self.dataset.append(transaction)
@@ -315,8 +316,9 @@ class SortedTree:
         #
         for i in range(len(self.children) - 1):
             for j in range(i + 1, len(self.children)):
-                self.children[i].addChild(self.children[j].node)
+                self.children[i].addChild(self.children[j].node, self.node + self.prefix)
         for child in self.children:
+            print("prefix is {}".format(self.prefix))
             print("node is {}".format(child.node))
             print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
             print("****" * 10)
@@ -393,11 +395,11 @@ class Best:
         data = self.encode(self.res, self.dataset)
         # # 展示编码结果
         # return data
-        root = SortedTree('root', data)
+        root = SortedTree('root', '', data)
         print("self.res is {}".format(self.res))
         print("self.mark is {}".format(self.mark))
         for node in self.res:
-            root.addChild(node)
+            root.addChild(node, root.node + root.prefix)
         if root.canLinked():
             root.linking(self.mark)
 
