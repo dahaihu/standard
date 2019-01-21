@@ -1,3 +1,5 @@
+import time
+
 class BE_Apriori:
     def __init__(self, affair, minSup):
         self.minSup = minSup * len(affair)
@@ -264,19 +266,15 @@ class Apriori:
 
 from collections import OrderedDict
 
-# mark 按照从小到大排序
-mark = ['a', 'b', 'c', 'd', 'e']
-mark.sort(reverse=True)
-
 
 # 一个递归树
 # 每个child都是一个同样的SortedTree树
 class SortedTree:
-    def __init__(self, node):
+    def __init__(self, node, dataset=None):
         self.node = node
         self.support = 0
         self.children = []
-        self.dataset = []
+        self.dataset = [] if not dataset else dataset
 
     def canLinked(self):
         return len(self.children) >= 2
@@ -288,9 +286,9 @@ class SortedTree:
         self.dataset.append(transaction)
 
     def index(self, mark):
-        return self.node.index(mark)
+        return mark[self.node]
 
-    def linking(self):
+    def linking(self, mark):
         """
         这个函数的部分可不可以再优化优化，这个可能需要的时间太长了
         直接找到所有index中最大的那个1
@@ -300,24 +298,45 @@ class SortedTree:
         不优化应该也是比Apriori算法的结果更好的
         因为一个频繁项集, 统计支持度的话，需要统计k * N(N是指事务记录的总数)
         而在此算法中计算支持度的话，需要的时间为 k * M(M指的是父节点包含的记录总数)
-        经过层层递进，M是越来越小的。也就是深度约深，支持度的时间是越少的
+        经过层层递进，M是越来越小的。也就是深度越深，支持度的时间是越少的
+        这个地方写的还是有点问题的
         :return:
         """
-        tmp = [(1 << child.node.index(mark)) for child in self.children]
+        print("self.children is {}".format([child.node for child in self.children]))
+        tmp = [(1 << child.index(mark)) for child in self.children]
+        print("tmp is {}".format(tmp))
+        # 划分数据集
         for transaction in self.dataset:
             for ind, ttt in enumerate(tmp):
                 if transaction & ttt == ttt:
                     self.children[ind].addTransaction(transaction)
+                    break
+        # 给该节点的每个孩子添加孩子节点
+        #
+        for i in range(len(self.children) - 1):
+            for j in range(i + 1, len(self.children)):
+                self.children[i].addChild(self.children[j].node)
+        for child in self.children:
+            print("node is {}".format(child.node))
+            print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
+            print("****" * 10)
+            print("child.children.length {}".format(len(child.children)))
+            if child.canLinked():
+                child.linking(mark)
 
-    # 经过这个操作之后，再进行数dataset的遍历
-    # 然后只遍历一次dataset就可以完成对dataset的分类
-    def prev(self):
-        self.mark = [(1 << child.index(mark)) for child in self.children]
+    # # 经过这个操作之后，再进行数dataset的遍历
+    # # 然后只遍历一次dataset就可以完成对dataset的分类
+    # def prev(self):
+    #     self.mark = [(1 << child.index(mark)) for child in self.children]
 
     def getSupport(self):
         return len(self.dataset)
 
 
+# 下一步，执行编码的操作
+# 这个可以交给之前的代码来实现
+# 然后就是完善频繁项基的步骤
+# 明天争取跑出一个版本来
 class Best:
     """
     dataset: 原始的数据集
@@ -325,23 +344,65 @@ class Best:
 
     """
 
-    def __init__(self, dataset, minSup):
-        self.dataset = dataset
+    def __init__(self, minSup, dataset=None):
+        self.dataset = dataset if dataset else self.loadDataSet()
         self.minSup = minSup
-        self.mark = dict()
-        self.res = dict()
+        self.mark = {}
+        self.res = None
+
+    def loadDataSet(self):
+        # return [[1,3,4],[2,3,5],[1,2,3,5],[2,5]]
+        return [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
 
     def scanDataset(self):
         for items in self.dataset:
             for item in items:
                 self.mark[item] = self.mark.get(item, 0) + 1
-        self.mark = {item: self.mark[item] for item in self.mark if self.mark[item] > self.minSup}
+        for item, support in list(self.mark.items()):
+            if support < self.minSup:
+                del self.mark[item]
+        # 从小到大排列的
+        self.res = sorted(self.mark, key=lambda x: self.mark[x], reverse=True)
+        self.fk_1 = self.mark
+        print("fk_1 is {}".format(self.fk_1))
+        self.mark = {node: (len(self.res) - ind - 1) for ind, node in enumerate(self.res)}
 
 
-import time
+    # 这个地方fk1，看情况应该是从大到小排序就可以正确的编码了
+    # 因为值是从小到大进行排列
+    # 从后又从前到后的判断
+    # 前面的移动的位次是最多的
+    def encode(self, fk1, data):
+        print("data is {}".format(data))
+        print("fk1 is {}".format(fk1))
+        encodedAffair = []
+        for a in data:
+            tmp = 0
+            for ele in fk1:
+                tmp = (tmp << 1) + 1 if ele in a else tmp << 1
+            # 实际上的运算还是得用这个
+            encodedAffair.append(tmp)
+            # 这个可以用来做视觉上的展示
+            # res.append(bin(tmp))
+        return encodedAffair
+
+    def main(self):
+        self.scanDataset()
+        # print("fk_1 is {}".format(self.fk_1))
+        # encode传入的应该是按照频繁项集从小到大排序的数组
+        data = self.encode(self.res, self.dataset)
+        # # 展示编码结果
+        # return data
+        root = SortedTree('root', data)
+        print("self.res is {}".format(self.res))
+        print("self.mark is {}".format(self.mark))
+        for node in self.res:
+            root.addChild(node)
+        if root.canLinked():
+            root.linking(self.mark)
 
 
-# import pymysql
+
 def test(p, dataSet, minsup):
     start = time.time()
     ins = p(dataSet, minsup)
@@ -349,28 +410,23 @@ def test(p, dataSet, minsup):
     return time.time() - start
 
 
-def loadDataSet(num=1000):
-    conn = pymysql.connect(
-        host='localhost',
-        user='root',
-        passwd='123456789',
-        db='employees',
-        port=3306,
-        charset='utf8',
-    )
-    cur = conn.cursor()
-    sql = 'select * from mushroom limit %d' % num
-    cur.execute(sql)
-    data = cur.fetchall()
-    cur.close()
-    conn.close()
-    return [d[1:] for d in data]
-
+"""
+下一步给节点加孩子，怎么给节点加孩子呢？
+"""
 
 if __name__ == '__main__':
-    with open("mushroom.dat", 'r') as file:
-        for line in file.readlines():
-            print(line)
+    b = Best(0.2)
+    res = b.main()
+    # # 对编码结果的展示
+    # for transaction in res:
+    #     print(bin(transaction))
+    # print('b.fk1 is {}'.format(b.res))
+    # print("b.mark is {}".format(b.mark))
+    # print("b.fk1 is {}".format(b.fk_1))
+
+    # with open("mushroom.dat", 'r') as file:
+    #     for line in file.readlines():
+    #         print(line)
     # supL = [0.1, 0.15, 0.2, 0.25, 0.3]
     # pL = [BE_Apriori, AprioriP, Apriori]
     # data = loadDataSet()
