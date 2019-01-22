@@ -266,6 +266,7 @@ class Apriori:
 
 from collections import OrderedDict
 
+minSup = 1
 
 # 一个递归树
 # 每个child都是一个同样的SortedTree树
@@ -278,10 +279,11 @@ class SortedTree:
         self.dataset = [] if not dataset else dataset
 
     def canLinked(self):
-        return len(self.children) >= 2
+        return len(self.dataset) > minSup
 
-    def addChild(self, node, prefix):
-        self.children.append(SortedTree(node, prefix))
+    # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
+    def addChild(self, node):
+        self.children.append(SortedTree(node, node + self.prefix))
 
     def addTransaction(self, transaction):
         self.dataset.append(transaction)
@@ -306,23 +308,35 @@ class SortedTree:
         print("self.children is {}".format([child.node for child in self.children]))
         tmp = [(1 << child.index(mark)) for child in self.children]
         print("tmp is {}".format(tmp))
+        """
+        第一步，给每个孩子节点分数据
+        """
         # 划分数据集
         for transaction in self.dataset:
             for ind, ttt in enumerate(tmp):
                 if transaction & ttt == ttt:
                     self.children[ind].addTransaction(transaction)
                     break
+
+        """
+        第二步，给每个孩子节点添加孩子节点
+        """
         # 给该节点的每个孩子添加孩子节点
-        #
+        # 通过该节点的孩子节点给孩子节点添加孩子节点的吗
+        # 是不是应该通过该节点的兄弟节点
         for i in range(len(self.children) - 1):
             for j in range(i + 1, len(self.children)):
-                self.children[i].addChild(self.children[j].node, self.node + self.prefix)
+                self.children[i].addChild(self.children[j].node)
+
+        """
+        第三步，对孩子节点进行深度优先的挖掘
+        """
         for child in self.children:
             print("prefix is {}".format(self.prefix))
             print("node is {}".format(child.node))
             print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
-            print("****" * 10)
             print("child.children.length {}".format(len(child.children)))
+            print("****" * 10)
             if child.canLinked():
                 child.linking(mark)
 
@@ -399,7 +413,7 @@ class Best:
         print("self.res is {}".format(self.res))
         print("self.mark is {}".format(self.mark))
         for node in self.res:
-            root.addChild(node, root.node + root.prefix)
+            root.addChild(node)
         if root.canLinked():
             root.linking(self.mark)
 
