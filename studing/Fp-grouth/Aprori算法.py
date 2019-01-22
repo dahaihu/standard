@@ -284,7 +284,7 @@ class SortedTree:
 
     # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
     def addChild(self, node):
-        self.children.append(SortedTree(node, node + self.prefix, self.result))
+        self.children.append(SortedTree(node, node + ', '+ self.prefix, self.result))
 
     def addTransaction(self, transaction):
         self.dataset.append(transaction)
@@ -334,7 +334,9 @@ class SortedTree:
         """
         for child in self.children:
             if len(child.dataset) >= minSup:
-                self.result.append(child.node + self.prefix)
+                self.result.append(child.node + ', ' + self.prefix)
+            else:
+                continue
             print("prefix is {}".format(self.prefix))
             print("node is {}".format(child.node))
             print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
@@ -342,6 +344,8 @@ class SortedTree:
             print("****" * 10)
             if child.canLinked():
                 child.linking(mark)
+        self.support = len(self.dataset)
+        del self.dataset
 
     # # 经过这个操作之后，再进行数dataset的遍历
     # # 然后只遍历一次dataset就可以完成对dataset的分类
@@ -431,21 +435,32 @@ def test(p, dataSet, minsup):
     ins.main()
     return time.time() - start
 
+def loadDataset(path):
+    dataset = []
+    with open(path, 'r') as file:
+        for line in file:
+            print(line.strip().split(' '))
+            dataset.append(line.strip().split(' '))
+    return dataset
 
 """
 下一步给节点加孩子，怎么给节点加孩子呢？
 """
 
 if __name__ == '__main__':
-    b = Best(0.2)
+    # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
+    start = time.time()
+    b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
+    # b = Best(0.2)
     res = b.main()
-    a = Apriori(None, 0.2)
-    rrr = []
-    for ele in a.main()[0]:
-        for item in ele:
-            rrr.append(list(item))
-    print(rrr)
-    print(len(rrr))
+    print('cost time is {}'.format(time.time() - start))
+    # a = Apriori(None, 0.2)
+    # rrr = []
+    # for ele in a.main()[0]:
+    #     for item in ele:
+    #         rrr.append(list(item))
+    # print(rrr)
+    # print(len(rrr))
 
     # # 对编码结果的展示
     # for transaction in res:
