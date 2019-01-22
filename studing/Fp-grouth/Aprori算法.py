@@ -179,7 +179,7 @@ class AprioriP:
 
 class Apriori:
     def __init__(self, dataSet, minsup):
-        self.dataSet = dataSet
+        self.dataSet = dataSet if dataSet else self.loadDataSet()
         self.minsup = minsup
 
     def loadDataSet(self):
@@ -271,7 +271,8 @@ minSup = 1
 # 一个递归树
 # 每个child都是一个同样的SortedTree树
 class SortedTree:
-    def __init__(self, node, prefix, dataset=None):
+    def __init__(self, node, prefix, result, dataset=None):
+        self.result = result
         self.node = node
         self.prefix = prefix
         self.support = 0
@@ -283,7 +284,7 @@ class SortedTree:
 
     # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
     def addChild(self, node):
-        self.children.append(SortedTree(node, node + self.prefix))
+        self.children.append(SortedTree(node, node + self.prefix, self.result))
 
     def addTransaction(self, transaction):
         self.dataset.append(transaction)
@@ -316,7 +317,7 @@ class SortedTree:
             for ind, ttt in enumerate(tmp):
                 if transaction & ttt == ttt:
                     self.children[ind].addTransaction(transaction)
-                    break
+                    # break
 
         """
         第二步，给每个孩子节点添加孩子节点
@@ -332,6 +333,8 @@ class SortedTree:
         第三步，对孩子节点进行深度优先的挖掘
         """
         for child in self.children:
+            if len(child.dataset) >= minSup:
+                self.result.append(child.node + self.prefix)
             print("prefix is {}".format(self.prefix))
             print("node is {}".format(child.node))
             print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
@@ -403,19 +406,22 @@ class Best:
         return encodedAffair
 
     def main(self):
+        result = []
         self.scanDataset()
         # print("fk_1 is {}".format(self.fk_1))
         # encode传入的应该是按照频繁项集从小到大排序的数组
         data = self.encode(self.res, self.dataset)
         # # 展示编码结果
         # return data
-        root = SortedTree('root', '', data)
+        root = SortedTree('root', '', result, data)
         print("self.res is {}".format(self.res))
         print("self.mark is {}".format(self.mark))
         for node in self.res:
             root.addChild(node)
         if root.canLinked():
             root.linking(self.mark)
+        print(result)
+        print(len(result))
 
 
 
@@ -433,6 +439,14 @@ def test(p, dataSet, minsup):
 if __name__ == '__main__':
     b = Best(0.2)
     res = b.main()
+    a = Apriori(None, 0.2)
+    rrr = []
+    for ele in a.main()[0]:
+        for item in ele:
+            rrr.append(list(item))
+    print(rrr)
+    print(len(rrr))
+
     # # 对编码结果的展示
     # for transaction in res:
     #     print(bin(transaction))
