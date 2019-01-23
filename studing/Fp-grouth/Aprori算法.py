@@ -1,5 +1,6 @@
 import time
 
+
 class BE_Apriori:
     def __init__(self, affair, minSup):
         self.minSup = minSup * len(affair)
@@ -266,7 +267,8 @@ class Apriori:
 
 from collections import OrderedDict
 
-minSup = 1
+minSup = 2
+
 
 # 一个递归树
 # 每个child都是一个同样的SortedTree树
@@ -280,11 +282,11 @@ class SortedTree:
         self.dataset = [] if not dataset else dataset
 
     def canLinked(self):
-        return len(self.dataset) > minSup
+        return len(self.dataset) >= minSup
 
     # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
     def addChild(self, node):
-        self.children.append(SortedTree(node, node + ', '+ self.prefix, self.result))
+        self.children.append(SortedTree(node, node + ', ' + self.prefix, self.result))
 
     def addTransaction(self, transaction):
         self.dataset.append(transaction)
@@ -292,7 +294,7 @@ class SortedTree:
     def index(self, mark):
         return mark[self.node]
 
-    def linking(self, mark):
+    def linking_depth_first(self, mark):
         """
         这个函数的部分可不可以再优化优化，这个可能需要的时间太长了
         直接找到所有index中最大的那个1
@@ -329,10 +331,14 @@ class SortedTree:
             for j in range(i + 1, len(self.children)):
                 self.children[i].addChild(self.children[j].node)
 
+        self.support = len(self.dataset)
+        del self.dataset
         """
         第三步，对孩子节点进行深度优先的挖掘
         """
         for child in self.children:
+            # 目前暂时的策略就是超过频繁项基，才可以继续挖掘子节点
+            # 但是呢，这个样子会过多的筛选不必要的候选项基
             if len(child.dataset) >= minSup:
                 self.result.append(child.node + ', ' + self.prefix)
             else:
@@ -344,8 +350,62 @@ class SortedTree:
             print("****" * 10)
             if child.canLinked():
                 child.linking(mark)
+
+    # 这一部分的计算通过广度优先的策略
+    def linking_width_first(self, mark):
+        """
+        统计该节点每个孩子节点的支持度，对于满足支持度的进行连接和剪枝
+        然后在进行下一步的计算
+        :return:
+        """
+        print("self.children is {}".format([child.node for child in self.children]))
+        tmp = [(1 << child.index(mark)) for child in self.children]
+        print("tmp is {}".format(tmp))
+        """
+        第一步，给每个孩子节点分数据
+        """
+        # 划分数据集
+        for transaction in self.dataset:
+            for ind, ttt in enumerate(tmp):
+                if transaction & ttt == ttt:
+                    self.children[ind].addTransaction(transaction)
+                    # break
+
+        """
+        第二步，筛选不是频繁项集的子节点
+        """
+        cur = 0
+        while cur < len(self.children):
+            if len(self.children[cur].dataset) < minSup:
+                self.children.pop(cur)
+            else:
+                cur += 1
+        # 给该节点的每个孩子添加孩子节点
+        # 通过该节点的孩子节点给孩子节点添加孩子节点的吗
+        # 是不是应该通过该节点的兄弟节点
+        for i in range(len(self.children) - 1):
+            for j in range(i + 1, len(self.children)):
+                self.children[i].addChild(self.children[j].node)
+
         self.support = len(self.dataset)
         del self.dataset
+        """
+        第三步，对孩子节点进行深度优先的挖掘
+        """
+        for child in self.children:
+            # 目前暂时的策略就是超过频繁项基，才可以继续挖掘子节点
+            # 但是呢，这个样子会过多的筛选不必要的候选项基
+            if len(child.dataset) >= minSup:
+                self.result.append(child.node + ', ' + self.prefix)
+            else:
+                continue
+            print("prefix is {}".format(self.prefix))
+            print("node is {}".format(child.node))
+            print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
+            print("child.children.length {}".format(len(child.children)))
+            print("****" * 10)
+            if child.canLinked():
+                child.linking_width_first(mark)
 
     # # 经过这个操作之后，再进行数dataset的遍历
     # # 然后只遍历一次dataset就可以完成对dataset的分类
@@ -374,22 +434,22 @@ class Best:
         self.res = None
 
     def loadDataSet(self):
-        # return [[1,3,4],[2,3,5],[1,2,3,5],[2,5]]
-        return [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+        return [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
+        # return [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
 
     def scanDataset(self):
         for items in self.dataset:
             for item in items:
                 self.mark[item] = self.mark.get(item, 0) + 1
         for item, support in list(self.mark.items()):
-            if support < self.minSup:
+            # 感觉自己就像个傻逼一样，无药可救的很
+            if support < minSup:
                 del self.mark[item]
         # 从小到大排列的
         self.res = sorted(self.mark, key=lambda x: self.mark[x], reverse=True)
         self.fk_1 = self.mark
         print("fk_1 is {}".format(self.fk_1))
         self.mark = {node: (len(self.res) - ind - 1) for ind, node in enumerate(self.res)}
-
 
     # 这个地方fk1，看情况应该是从大到小排序就可以正确的编码了
     # 因为值是从小到大进行排列
@@ -423,10 +483,9 @@ class Best:
         for node in self.res:
             root.addChild(node)
         if root.canLinked():
-            root.linking(self.mark)
+            root.linking_width_first(self.mark)
         print(result)
         print(len(result))
-
 
 
 def test(p, dataSet, minsup):
@@ -435,13 +494,17 @@ def test(p, dataSet, minsup):
     ins.main()
     return time.time() - start
 
+
 def loadDataset(path):
     dataset = []
     with open(path, 'r') as file:
         for line in file:
             print(line.strip().split(' '))
             dataset.append(line.strip().split(' '))
+    global minSup
+    minSup = len(dataset) * 0.2
     return dataset
+
 
 """
 下一步给节点加孩子，怎么给节点加孩子呢？
@@ -450,7 +513,10 @@ def loadDataset(path):
 if __name__ == '__main__':
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()
-    b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
+    # b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
+    # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
+    # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
+    b = Best(0.2)
     # b = Best(0.2)
     res = b.main()
     print('cost time is {}'.format(time.time() - start))
