@@ -179,13 +179,13 @@ class AprioriP:
 
 
 class Apriori:
-    def __init__(self, dataSet, minsup):
+    def __init__(self, minsup, dataSet=None):
         self.dataSet = dataSet if dataSet else self.loadDataSet()
         self.minsup = minsup
 
     def loadDataSet(self):
-        # return [[1,3,4],[2,3,5],[1,2,3,5],[2,5]]
-        return [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+        return [[1,3,4],[2,3,5],[1,2,3,5],[2,5]]
+        # return [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
 
     # 找出所有的单个项
     def createC(self, dataset):
@@ -282,6 +282,7 @@ class SortedTree:
         self.dataset = [] if not dataset else dataset
 
     def canLinked(self):
+        # 真的是搞不懂，这个地方都可以有一个坑用来阻拦我
         return len(self.dataset) >= minSup
 
     # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
@@ -513,38 +514,13 @@ def loadDataset(path):
 if __name__ == '__main__':
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()
+    a = Apriori(0.2, dataSet=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
+    res = a.main()
+    print('res is {}'.format(res[0]))
     # b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
-    b = Best(0.2)
     # b = Best(0.2)
-    res = b.main()
+    # b = Best(0.2)
+    # res = b.main()
     print('cost time is {}'.format(time.time() - start))
-    # a = Apriori(None, 0.2)
-    # rrr = []
-    # for ele in a.main()[0]:
-    #     for item in ele:
-    #         rrr.append(list(item))
-    # print(rrr)
-    # print(len(rrr))
-
-    # # 对编码结果的展示
-    # for transaction in res:
-    #     print(bin(transaction))
-    # print('b.fk1 is {}'.format(b.res))
-    # print("b.mark is {}".format(b.mark))
-    # print("b.fk1 is {}".format(b.fk_1))
-
-    # with open("mushroom.dat", 'r') as file:
-    #     for line in file.readlines():
-    #         print(line)
-    # supL = [0.1, 0.15, 0.2, 0.25, 0.3]
-    # pL = [BE_Apriori, AprioriP, Apriori]
-    # data = loadDataSet()
-    # result = []
-    # for sup in supL:
-    #     result.append([])
-    #     for p in pL:
-    #         result[-1].append(test(p, data, sup))
-    # with open('result.txt','w') as file:
-    #     file.write(str(result))

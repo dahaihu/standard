@@ -35,11 +35,28 @@ class SortedTree:
 
     # 这一部分的计算通过广度优先的策略
     def linking_width_first(self, mark, fqsets, pre=True):
+        """
+        有一个问题就是在什么时候进行候选项基的筛选呢？
+        对这个候选项基进行的每个子集进行判断，然后进行遍历事务记录，统计支持度
+        应该是遍历事务记录之前进行判断了是吧？
+        也就是在第一步的时候就应该判断一下子了！！！
+        :param mark:
+        :param fqsets:
+        :param pre:
+        :return:
+        """
         print("prefix is {}".format(self.prefix))
         print("self.children is {}".format([child.node for child in self.children]))
+        cur = 0
+        while cur < len(self.children):
+            if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
+                del self.children[cur]
+            cur += 1
+
         tmp = [(1 << child.index(mark)) for child in self.children]
         print("tmp is {}".format(tmp))
         """
+        能不能在给对孩子节点进行筛选呢？
         第一步，给每个孩子节点分数据
         """
         # 划分数据集
@@ -70,11 +87,14 @@ class SortedTree:
                 cur += 1
         """
         第三步，给孩子节点分可能的子节点
+        感觉在这个地方筛选子节点也是没有问题的啊！
+        这个不就是相当于
         """
         for i in range(len(self.children) - 1):
             for j in range(i + 1, len(self.children)):
-                if pre or self.valid_candidate([self.children[j].node] + self.children[i].prefix, fqsets):
-                    self.children[i].addChild(self.children[j].node)
+                self.children[i].addChild(self.children[j].node)
+                # if pre or self.valid_candidate([self.children[j].node] + self.children[i].prefix, fqsets):
+                #     self.children[i].addChild(self.children[j].node)
 
         self.support = len(self.dataset)
         del self.dataset
@@ -165,6 +185,8 @@ class Best:
             tmp = []
             result.append(set())
             for node in res:
+                if not node.children:
+                    continue
                 if count > 2:
                     node.linking_width_first(self.mark, result[-2],
                                              pre=False)
