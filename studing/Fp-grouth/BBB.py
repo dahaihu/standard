@@ -26,8 +26,8 @@ class SortedTree:
 
     def valid_candidate(self, candidate, fpset):
         candidate = set(candidate)
-        print("candidate is {}".format(candidate))
-        print("fpset is {}".format(fpset))
+        # print("candidate is {}".format(candidate))
+        # print("fpset is {}".format(fpset))
         for element in candidate:
             if (candidate - {element}) not in fpset:
                 return False
@@ -45,8 +45,8 @@ class SortedTree:
         :param pre:
         :return:
         """
-        print("prefix is {}".format(self.prefix))
-        print("self.children is {}".format([child.node for child in self.children]))
+        # print("prefix is {}".format(self.prefix))
+        # print("self.children is {}".format([child.node for child in self.children]))
         cur = 0
         while cur < len(self.children):
             if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
@@ -54,7 +54,7 @@ class SortedTree:
             cur += 1
 
         tmp = [(1 << child.index(mark)) for child in self.children]
-        print("tmp is {}".format(tmp))
+        # print("tmp is {}".format(tmp))
         """
         能不能在给对孩子节点进行筛选呢？
         第一步，给每个孩子节点分数据
@@ -206,7 +206,6 @@ def loadDataset(path):
         for line in file:
             print(line.strip().split(' '))
             dataset.append(line.strip().split(' '))
-    global minSup
     minSup = len(dataset) * 0.2
     return minSup, dataset
 
@@ -215,10 +214,11 @@ if __name__ == '__main__':
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()
     # minSup, dataset = loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
-    dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
-    minSup = 2
+    # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+    # minSup = 2
+    # b = Best(minSup, dataset)
+    minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
     b = Best(minSup, dataset)
-    # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best(2)
     # b = Best(0.2)
