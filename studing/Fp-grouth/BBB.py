@@ -34,7 +34,7 @@ class SortedTree:
         return True
 
     # 这一部分的计算通过广度优先的策略
-    def linking_width_first(self, mark, fqsets, pre=True):
+    def linking_width_first(self, mark, fqsets, pre=True, duizhao=set()):
         """
         有一个问题就是在什么时候进行候选项基的筛选呢？
         对这个候选项基进行的每个子集进行判断，然后进行遍历事务记录，统计支持度
@@ -47,13 +47,25 @@ class SortedTree:
         """
         # print("prefix is {}".format(self.prefix))
         # print("self.children is {}".format([child.node for child in self.children]))
-        cur = 0
-        while cur < len(self.children):
-            if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
-                del self.children[cur]
-            cur += 1
 
-        tmp = [(1 << child.index(mark)) for child in self.children]
+        """
+        对孩子节点进行剪纸
+        """
+        # if duizhao:
+        #     cur = 0
+        #     while cur < len(self.children):
+        #         # if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
+        #         #     del self.children[cur]
+        #         # cur += 1
+        #         if self.children[cur] in duizhao:
+        #             del self.children[cur]
+        #             continue
+        #         cur += 1
+        #
+        # tmp = [(1 << child.index(mark)) for child in self.children]
+
+        tmp = [(1 << child.index(mark)) for child in self.children if child not in duizhao]
+
         # print("tmp is {}".format(tmp))
         """
         能不能在给对孩子节点进行筛选呢？
@@ -82,7 +94,7 @@ class SortedTree:
         cur = 0
         while cur < len(self.children):
             if len(self.children[cur].dataset) < self.min_sup:
-                self.children.pop(cur)
+                del self.children[cur]
             else:
                 cur += 1
         """
@@ -168,11 +180,13 @@ class Best:
         # print("fk_1 is {}".format(self.fk_1))
         # encode传入的应该是按照频繁项集从小到大排序的数组
         data = self.encode(self.res, self.dataset)
+        # for line in data:
+        #     print(bin(line))
         # # 展示编码结果
         # return data
         root = SortedTree('', [], result, self.minSup, data)
         # print("self.res is {}".format(self.res))
-        # print("self.mark is {}".format(self.mark))
+        print("self.mark is {}".format(self.mark))
         res = []
         for node in self.res:
             root.addChild(node)
@@ -182,21 +196,45 @@ class Best:
         count = 0
         while res:
             count += 1
+            print("频繁{}项集的个数为{}".format(count - 1, len(res)))
             tmp = []
             result.append(set())
+            bbb = set()
+            # worilegoule = 0
+            if count > 2:
+
+                aaa = dict()
+                for node in res:
+                    for child in node.children:
+                        # worilegoule += 1
+                        candidates = frozenset(child.prefix)
+                        for candidate in child.prefix[2:]:
+                            aaa.setdefault(candidates - {candidate}, set()).add(child)
+                for Ck in aaa:
+                    if Ck not in result[-2]:
+                        bbb.update(set(aaa[Ck]))
+            # print("候选项集的个数为{}".format(worilegoule))
+            print("剪枝去掉的项集个数为{}".format(len(bbb)))
             for node in res:
-                if not node.children:
-                    continue
-                if count > 2:
-                    node.linking_width_first(self.mark, result[-2],
-                                             pre=False)
-                else:
-                    node.linking_width_first(self.mark, set(), pre=True)
-                for child in node.children:
-                    tmp.append(child)
-                    result[-1].add(frozenset(child.prefix))
+                if node.children:
+                    node.linking_width_first(self.mark, 'a', False, bbb)
+                    for child in node.children:
+                        tmp.append(child)
+                        result[-1].add(frozenset(child.prefix))
+            # for node in res:
+            #     if not node.children:
+            #         continue
+            #     if count > 2:
+            #         node.linking_width_first(self.mark, result[-2],
+            #                                  pre=False)
+            #     else:
+            #         node.linking_width_first(self.mark, set(), pre=True)
+            #     for child in node.children:
+            #         tmp.append(child)
+            #         result[-1].add(frozenset(child.prefix))
             res = tmp
-        print(result)
+        # for FK in result:
+        #     print(FK)
         print(len(result))
 
 
@@ -213,12 +251,18 @@ def loadDataset(path):
 if __name__ == '__main__':
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()
-    # minSup, dataset = loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
+    minSup, dataset = loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
-    # minSup = 2
-    # b = Best(minSup, dataset)
-    minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
+    # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
+    #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
+    #            ['socks', 'gloves'],
+    #            ['bread', 'milk', 'shoes', 'socks', 'eggs'],
+    #            ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
+    #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
+    # minSup = 3
     b = Best(minSup, dataset)
+    # minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
+    # b = Best(minSup, dataset)
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best(2)
     # b = Best(0.2)
