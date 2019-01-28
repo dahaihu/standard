@@ -51,20 +51,22 @@ class SortedTree:
         """
         对孩子节点进行剪纸
         """
-        # if duizhao:
-        #     cur = 0
-        #     while cur < len(self.children):
-        #         # if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
-        #         #     del self.children[cur]
-        #         # cur += 1
-        #         if self.children[cur] in duizhao:
-        #             del self.children[cur]
-        #             continue
-        #         cur += 1
-        #
-        # tmp = [(1 << child.index(mark)) for child in self.children]
-
-        tmp = [(1 << child.index(mark)) for child in self.children if child not in duizhao]
+        if duizhao:
+            tmp = []
+            cur = 0
+            while cur < len(self.children):
+                # if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
+                #     del self.children[cur]
+                # cur += 1
+                if self.children[cur] in duizhao:
+                    del self.children[cur]
+                    continue
+                tmp.append(1 << self.children[cur].index(mark))
+                cur += 1
+        else:
+            tmp = [(1 << child.index(mark)) for child in self.children]
+        # 找到问题了，children不做修正的话，分子节点的时候，会继续分的
+        # tmp = [(1 << child.index(mark)) for child in self.children if child not in duizhao]
 
         # print("tmp is {}".format(tmp))
         """
