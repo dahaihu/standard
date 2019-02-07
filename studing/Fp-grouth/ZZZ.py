@@ -1,5 +1,6 @@
 from functools import reduce
-
+import time
+from collections import defaultdict
 """
 全部都不需要headerTable
 根据孩子节点的索引来进行计算
@@ -10,7 +11,21 @@ from functools import reduce
 
 children 存储的是字符， 或者该字符对应的TreeNode
 
+children 中的非节点类型，全存储为None，这样子应该会更快的
+目前评测着，没有问题
+因为node2往node1节点上合并的话，得是node2是一个节点，那么node1就可以从node2上来进行获取数据
+这样在进行获取node_list的时候也是加快素的的
+测试了isinstance(node, TreeNode)的速度比if node在进行一亿个节点的判断的时候要慢了一倍
 """
+
+# cost = 0
+# 
+# def isinstance(a, b):
+#     start = time.time()
+#     res = isinstance(a, b)
+#     global cost
+#     cost += time.time() - start
+#     return res
 
 
 class TreeNode:
@@ -142,10 +157,11 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
 # 影响的永远都是第一个节点
 # 对第一个节点进行改造
 # 还是有点问题的，并没有node完成初始化
-# 好像并没有关联起来，仅仅对node1初始化为TreeNode，是不是没有用的，
+# 好像并没有关联起来，仅仅对node1初始化为TreeNode，是不是没有用的
 def mergeNode(node1, node2):
     """
-    功能还是分开的写比较好
+    把node2节点上的数据，复制到node1上去。
+    但是呢当node1位
     :param retTree:
     :param node:
     :return:
@@ -171,12 +187,23 @@ def mergeNode(node1, node2):
     return node1
 
 def get_node_list(inTree, index, res):
-    if (not inTree) or isinstance(inTree, str):
-        return
+    """
+    开始的时候，inTree肯定是一个节点
+    所以是可以正确的走下去的
+    在进行递归的调用get_node_list的时候
+    就得在inTree是节点的情况下进行调用了
+    :param inTree:
+    :param index:
+    :param res:
+    :return:
+    """
+    # if not isinstance(inTree, TreeNode):
+    #     return
     if isinstance(inTree.children[index], TreeNode):
         res.append(inTree.children[index])
     for i in range(index - 1, -1, -1):
-        get_node_list(inTree.children[i], index - i - 1, res)
+        if isinstance(inTree.children[i], TreeNode):
+            get_node_list(inTree.children[i], index - i - 1, res)
 
 
 def _sum(node_list):
@@ -200,6 +227,10 @@ def update(inTree, index):
                 # 终于找到错误在哪里了，全部出现在这里
                 inTree.children[ind + 1 + index] = mergeNode(inTree.children[ind + 1 + index], child)
     # 更新一个节点，就得把这个节点置为None
+    """
+    这个地方非常重要，如果节点设置为None之后，这个节点下的数据都不会被之后的操作访问到
+    因为都是通过节点的索引，和节点得是TreeNode类型的才行
+    """
     inTree.children[index] = None
     for i in range(index - 1, -1, -1):
         if isinstance(inTree.children[i], TreeNode):
@@ -210,10 +241,12 @@ def update(inTree, index):
 """
 时间主要就在这里
 感觉改进还是有戏的
+这个mineTree花费的是最多的时间
 """
 def mineTree(inTree, minSup, prefix, res):
     """
     基本逻辑是在inTree上剔除频繁项基节点，然后再进行频繁项基的挖掘
+    上面的删除是指，将
     :param inTree:
     :param minSup:
     :param prefix:
@@ -226,20 +259,26 @@ def mineTree(inTree, minSup, prefix, res):
     # _all = set()
     # 第一遍过滤的时候，统计支持度，然后更新树
     ll = len(inTree.children)
+    d = defaultdict(list)
     for ind, node in enumerate(inTree.children[::-1]):
         if not node: continue
         # 之前逆序更新树的时候，index都是计算错的
         ind = ll - ind - 1
-        node_list = []
-        """
-        照理说get_node_list没问题的话，update也不会有问题的
-        压根并没有对节点的children的长度进行修改，为什么会在inTree.children[index]上出现list index out of range的exception呢？
-        """
-        get_node_list(inTree, ind, node_list)
-        count = reduce(lambda x, y: x + (y.count if isinstance(y, TreeNode) else 0), node_list, 0)
+        # d[node.name if isinstance(node, TreeNode) else node] = []
+        # # node_list = []
+        # """
+        # 照理说get_node_list没问题的话，update也不会有问题的
+        # 压根并没有对节点的children的长度进行修改，为什么会在inTree.children[index]上出现list index out of range的exception呢？
+        # """
+        # get_node_list(inTree, ind, node_list)
+        get_node_list(inTree, ind, d[node.name if isinstance(node, TreeNode) else node])
+        # print("node_list's length is {}".format(len(d[node.name if isinstance(node, TreeNode) else node])))
+        count = reduce(lambda x, y: x + (y.count if isinstance(y, TreeNode) else 0), d[node.name if isinstance(node, TreeNode) else node], 0)
+        # print("node's count is {}".format(count))
         if count < minSup:
             # _all.add(node.name if isinstance(node, TreeNode) else node)
             update(inTree, ind)
+            # d.pop(node.name if isinstance(node, TreeNode) else node)
     """
     第一步和第二步，可以是分离的吧？
     如果第一步清理为None的节点，对第二步是不会造成影响的
@@ -249,13 +288,14 @@ def mineTree(inTree, minSup, prefix, res):
     for ind, node in enumerate(inTree.children):
         if not node: continue
         res.append(prefix + [node.name if isinstance(node, TreeNode) else node])
-        node_list = []
-        get_node_list(inTree, ind, node_list)
-        if node_list:
+        # node_list = []
+        # get_node_list(inTree, ind, node_list)
+        node_list = d[node.name if isinstance(node, TreeNode) else node]
+        # if node_list:
             # 每次挖掘的树，都是新创建的
-            node = TreeNode(node.name if isinstance(node, TreeNode) else node, 0, [child.name if isinstance(child, TreeNode) else child for child in node_list[0].children])
-            reduce(mergeNode, node_list, node)
-            mineTree(node, minSup, prefix + [node.name], res)
+        node = TreeNode(node.name if isinstance(node, TreeNode) else node, 0, [child.name if isinstance(child, TreeNode) else child for child in node_list[0].children])
+        reduce(mergeNode, node_list, node)
+        mineTree(node, minSup, prefix + [node.name], res)
 
 
 def loadDataset(path, _max=float('inf')):
@@ -268,7 +308,7 @@ def loadDataset(path, _max=float('inf')):
             dataset.append(line.strip().split(' '))
             if count >= _max:
                 break
-    minSup = len(dataset) * 0.3
+    minSup = len(dataset) * 0.2
     return minSup, dataset
 
 # 测试删除支持度小于最小支持度的节点
@@ -284,11 +324,11 @@ def final_test():
     retDict = createInitSet(dataset)
     retTree = createTree(retDict, minSup)
     retTree.disp()
-
     res = []
     mineTree(retTree, minSup, [], res)
-    for line in res:
-        print(line)
+    # for line in res:
+    #     print(line)
+    # print("cost is {}".format(cost))
     print("cost time is {}".format(time.time() - start))
 
 def test_function():
@@ -309,10 +349,11 @@ def test_function():
     retTree.disp()
     result = []
     mineTree(retTree, minSup, [], result)
-    print("length is {}".format(len(result)))
-    for res in result:
-        print(res)
+    # print("length is {}".format(len(result)))
+    # for res in result:
+    #     print(res)
 
+    print("cost is {}".format(cost))
 
 def test_update():
     # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
@@ -343,7 +384,7 @@ def test_update():
 
 
 if __name__ == '__main__':
-    # final_test()
-    test_function()
+    final_test()
+    # test_function()
     # test_update()
 
