@@ -293,63 +293,70 @@ def update(inTree, index):
 def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, res):
     """
     基本逻辑是在inTree上剔除频繁项基节点，然后再进行频繁项基的挖掘
-    上面的删除是指，将
+    上面的删除是指，将将对应的节点置为None
+    目前来说，两步已经合成一步了，但是呢，时间似乎并没有减少
     :param inTree:
     :param minSup:
     :param prefix:
     :param res:
     :return:
     """
-    # _all = {node.name for node in inTree.children if node}
-    # print("res is {}".format(res))
-    # inTree.disp()
-    # _all = set()
-    # 第一遍过滤的时候，统计支持度，然后更新树
     ll = len(inTree.children)
-    d = defaultdict(list)
+    # d = defaultdict(list)
+    _all = set()
     # 可不可以将两遍遍历转化成一遍，这样的话是不是更快一些
+    # 完成两遍遍历合成一遍遍历
+    # 但是效果没有多少
     for ind, node in enumerate(inTree.children[::-1]):
         # ind一开始是逆序的
         # 经过下面的操作转化成正序的
         ind = ll - ind - 1
-        node_name = getNode(inTree, ind, ind_to_node, node_to_ind)
+        node_name = node.name if node else getNode(inTree, ind, ind_to_node, node_to_ind)
         if node_name not in inTree.descendants:
             continue
-
+        node_list = []
         # 获取count和get_node_list能不能进行合并，这样就不必遍历两遍节点了
-        get_node_list(inTree, ind, d[node_name])
+        get_node_list(inTree, ind, node_list)
         # print("node_list's length is {}".format(len(d[node.name if isinstance(node, TreeNode) else node])))
-        count = reduce(lambda x, y: x + (y.count if y else 0), d[node_name], 0)
+        count = reduce(lambda x, y: x + (y.count if y else 0), node_list, 0)
+
         # print("node's count is {}".format(count))
         if count < minSup:
             # _all.add(node.name if isinstance(node, TreeNode) else node)
             update(inTree, ind)
-            inTree.descendants.remove(node_name)
-
-            # d.pop(node.name if isinstance(node, TreeNode) else node)
+            # inTree.descendants.remove(node_name)
+            _all.add(node_name)
+        else:
+            # print("new item_sets is {}".format(prefix + [node_name]))
+            res.append(prefix + [node_name])
+            node = TreeNode(node_name, 0, [None] * len(node_list[0].children))
+            reduce(mergeNode, node_list, node)
+            node.descendants -= _all
+            mineTree(node, minSup, prefix + [node.name], ind_to_node, node_to_ind, res)
     """
     第一步和第二步，可以是分离的吧？
     如果第一步清理为None的节点，对第二步是不会造成影响的
     """
 
     # 第二遍的时候，添加到结果之中
-    for ind, node in enumerate(inTree.children):
-        # node_name = getNode(inTree, ind, ind_to_node, node_to_ind)
-        # if not node_name in inTree.descendants: continue
-        node_name = node.name if node else getNode(inTree, ind, ind_to_node, node_to_ind)
-        # if node:
-        #     print("node.name == getNode {}".format(getNode(inTree, ind, ind_to_node, node_to_ind) == node.name))
-        if node_name not in inTree.descendants:
-            continue
-        print("new item_sets is {}".format(prefix + [node_name]))
-        res.append(prefix + [node_name])
-        # node_list = []
-        # get_node_list(inTree, ind, node_list)
-        node_list = d[node_name]
-        # 这个为什么会出现list index out of range的错误
-        node = TreeNode(node_name, 0, [None] * len(node_list[0].children))
-        reduce(mergeNode, node_list, node)
-        mineTree(node, minSup, prefix + [node.name], ind_to_node, node_to_ind, res)
+    # for ind, node in enumerate(inTree.children):
+    #     # node_name = getNode(inTree, ind, ind_to_node, node_to_ind)
+    #     # if not node_name in inTree.descendants: continue
+    #     node_name = node.name if node else getNode(inTree, ind, ind_to_node, node_to_ind)
+    #     # if node:
+    #     #     print("node.name == getNode {}".format(getNode(inTree, ind, ind_to_node, node_to_ind) == node.name))
+    #     if node_name not in inTree.descendants:
+    #         continue
+    #     print("new item_sets is {}".format(prefix + [node_name]))
+    #     res.append(prefix + [node_name])
+    #     # node_list = []
+    #     # get_node_list(inTree, ind, node_list)
+    #     node_list = d[node_name]
+    #     # 这个为什么会出现list index out of range的错误
+    #     node = TreeNode(node_name, 0, [None] * len(node_list[0].children))
+    #     reduce(mergeNode, node_list, node)
+    #     node.descendants -= _all
+    #     mineTree(node, minSup, prefix + [node.name], ind_to_node, node_to_ind, res)
 
 
 def loadDataset(path, _max=float('inf')):
@@ -390,16 +397,16 @@ def final_test():
 
 def test_function():
     start = time.time()
-    dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+    # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
     # dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
-    # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
-    #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
-    #            ['socks', 'gloves'],
-    #            ['bread', 'milk', 'shoes', 'socks', 'eggs'],
-    #            ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
-    #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
+    dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
+               ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
+               ['socks', 'gloves'],
+               ['bread', 'milk', 'shoes', 'socks', 'eggs'],
+               ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
+               ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
     # dataset = [[1,2,5],[2,4],[2,3],[1,2,4],[1,3],[2,3],[1,3],[1,2,3,5],[1,2,3]]
-    minSup = 2
+    minSup = 3
     retDict = createInitSet(dataset)
     # for key, value in retDict.items():
     #     print("{} => {}".format(key, value))
@@ -445,6 +452,6 @@ def test_update():
 
 
 if __name__ == '__main__':
-    # final_test()
-    test_function()
+    final_test()
+    # test_function()
     # test_update()

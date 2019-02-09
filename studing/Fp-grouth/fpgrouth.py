@@ -52,6 +52,10 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
     for ind in s:
         if headerTable[ind] < minSup:
             del headerTable[ind]
+    # 对headerTable中的头结点进行排序
+    # 键为节点，值为节点出现的频次从大到小排序的索引
+    # 也就是说索引越小值越大
+    mark = {node:ind for ind, node in enumerate(sorted(headerTable, key=lambda x:headerTable[x], reverse=True))}
 
     # 现在的这个headerTable中的键是频繁项，值是频繁项出现的次数
     freqItemSet = set(headerTable.keys())  # 频繁项集，这个不用set函数处理，是不是也是可以的。？？？  freqItemSet=set(headerTable)即可
@@ -74,12 +78,16 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
         # 整理成orderedItems
         localD = {}  # 这个是用来干什么的？？？用来获取当前事务中所含的频繁项集
         for item in tranSet:  # put transaction items in order
-            if item in freqItemSet:
-                localD[item] = headerTable[item][0]
+            if item in mark:
+                localD[item] = mark[item]
         # localD用来存放该事务记录中，每个频繁项的频次
         if len(localD) > 0:
             # 对频繁项按照出现的次数进行从大到小的排序
-            orderedItems = [v[0] for v in sorted(localD.items(), key=lambda p: p[1], reverse=True)]
+            """
+            这个地方是有问题的，觉得相同的数量的项，在不同的组合中，顺序可能是不一致的
+            最好前面统一制定排序
+            """
+            orderedItems = [v[0] for v in sorted(localD.items(), key=lambda p: p[1])]
             ##总的应该是，对每个事物的项目，根据项目的频率，按照从大到小的排序
             updateTree(orderedItems, retTree, headerTable, count)  # populate tree with ordered freq itemset
     return retTree, headerTable  # return tree and header table
@@ -179,21 +187,22 @@ def mineTree(inTree, headerTable, minSup, preFix, freqItemList):
     # 这个bigL是根据按照频繁项的频率从小到大排序的频繁项
     # 这个bigL是从headerTable中来的
     # 这个bigL的顺序，影响结果吗?
-    print("headerTable is {}".format(headerTable))
-    print("preFix is {}".format(preFix))
+    # print("headerTable is {}".format(headerTable))
+    # print("preFix is {}".format(preFix))
     # 每mineTree一次都得对headerTable中的键按照频次从小到大排序一次的吗？
     # 而且，这个headerTable也是不变得的吧？？？？？
     # 这个地方sort一下有用吗？
     # 从底部网上走，和乱序的走，有什么区别的吗
-    bigL = [v[0] for v in sorted(headerTable.items(), key=lambda p: p[1][0])]  # (sort header table)
-    print("bigL is {}".format(bigL))
+    bigL = [v[0] for v in sorted(headerTable.items(), key=lambda p: p[1][0], reverse=True)]  # (sort header table)
+    # print("bigL is {}".format(bigL))
     # 这个basePat是单个项
     for basePat in bigL:  # start from bottom of header table
-        newFreqSet = preFix.copy()
-        newFreqSet.add(basePat)  # 把当前的basePat加到这个newFreqSet中去
+        # newFreqSet = preFix.copy()
+        # newFreqSet.add(basePat)  # 把当前的basePat加到这个newFreqSet中去
+        newFreqSet = preFix + [basePat]
         # 但是呢，这个newFreqSet就是频繁项集吗？？？？？？？
         # print 'finalFrequent Item: ',newFreqSet    #append to set
-        print("newFreqSet is {}".format(newFreqSet))
+        # print("newFreqSet is {}".format(newFreqSet))
         freqItemList.append(newFreqSet)
         condPattBases = findPrefixPath(basePat, headerTable[basePat][1])
         # print 'condPattBases :',basePat, condPattBases
@@ -228,12 +237,32 @@ def createInitSet(dataSet):
 # dataSet=createInitSet(loadSimpDat())
 # print(dataSet)
 
+def loadDataset(path):
+    dataset = []
+    with open(path, 'r') as file:
+        for line in file:
+            # print(line.strip().split(' '))
+            dataset.append(line.strip().split(' '))
+    global minSup
+    minSup = len(dataset) * 0.2
+    return dataset
 
-minSup = 3
-simpDat = loadSimpDat()
+from time import time
+start = time()
+simpDat = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
+# minSup = 2
+# simpDat = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+# simpDat = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
+
+
 initSet = createInitSet(simpDat)
+print('数据集的长度为 {}'.format(len(initSet)))
 myFPtree, myHeaderTab = createTree(initSet, minSup)
 myFPtree.disp()
 myFreqList = []
-mineTree(myFPtree, myHeaderTab, minSup, set([]), myFreqList)
-print("myFreqList is {}".format(myFreqList))
+print('minSup is {}'.format(minSup))
+mineTree(myFPtree, myHeaderTab, minSup, [], myFreqList)
+print("myFreqList is {}".format(len(myFreqList)))
+# for items in myFreqList:
+#     print(items)
+print('cost time is {}'.format(time() - start))
