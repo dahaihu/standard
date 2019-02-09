@@ -45,6 +45,7 @@ class TreeNode:
         self.children = children  # 当前节点的孩子节点
         # 用来保存一个节点的所有子孙节点
         self.descendants = set()
+        self.length = len(children)
         # self.nodes = {}
 
     def inc(self, numOccur):  # 由于事务是含有次数的，所以，当前节点出现的频次可能是多余1的，所以加上numOccur
@@ -220,11 +221,6 @@ def mergeNode(node1, node2):
         node1 = TreeNode(node2.name, node2.count, [None] * len(node2.children))
         node1.descendants = node2.descendants.copy()
 
-    # 这个地方有意思了，像个傻逼一样了
-    # node1.descendants.update(node2.descendants.copy())
-    # 由于是往node1上添加字符或者什么的
-    # 所以只需要管理node2上的children
-    # 需要进行递归的操作
     for ind, node in enumerate(node2.children):
         if node:
             node1.children[ind] = mergeNode(node1.children[ind], node)
@@ -301,8 +297,6 @@ def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, res):
     :param res:
     :return:
     """
-    ll = len(inTree.children)
-    # d = defaultdict(list)
     _all = set()
     # 可不可以将两遍遍历转化成一遍，这样的话是不是更快一些
     # 完成两遍遍历合成一遍遍历
@@ -310,8 +304,8 @@ def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, res):
     for ind, node in enumerate(inTree.children[::-1]):
         # ind一开始是逆序的
         # 经过下面的操作转化成正序的
-        ind = ll - ind - 1
-        node_name = node.name if node else getNode(inTree, ind, ind_to_node, node_to_ind)
+        ind = inTree.length - ind - 1
+        node_name = getNode(inTree, ind, ind_to_node, node_to_ind)
         if node_name not in inTree.descendants:
             continue
         node_list = []
