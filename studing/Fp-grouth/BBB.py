@@ -1,5 +1,5 @@
 import time
-
+from functools import reduce
 """
 代码里很多用数组的索引当做键来进行操作的，这个很有意思
 """
@@ -39,13 +39,13 @@ class SortedTree:
 
     # 对该节点进行剪枝
     def valid_candidate(self, candidate, fpset):
-        candidate = set(candidate)
+        candidates = set(candidate)
         # print("candidate is {}".format(candidate))
         # print("fpset is {}".format(fpset))
         # 这个地方其实只要从第三个以及以后开始验证就好了
         # 因为最后两个是连接而成的，分别去掉最后两个肯定就是频繁(k-1)项集了
         for element in candidate[2:]:
-            if (candidate - {element}) not in fpset:
+            if (candidates - {element}) not in fpset:
                 return False
         return True
 
@@ -82,6 +82,16 @@ class SortedTree:
                     cur += 1
         else:
             tmp = [(1 << child.index(mark)) for child in self.children]
+
+        # cur = 0
+        # while cur < len(self.children):
+        #     # 传进来的pre是在count小于等于2的时候，这样就不需要经过剪枝了
+        #     # 在count大于2的时候就需要通过self.valida_candidate来剪枝达到效果了
+        #     if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
+        #         del self.children[cur]
+        #     cur += 1
+        # tmp = [(1 << child.index(mark)) for child in self.children]
+
         # 找到问题了，children不做修正的话，分子节点的时候，会继续分的
         # tmp = [(1 << child.index(mark)) for child in self.children if child not in duizhao]
 
@@ -208,8 +218,8 @@ class Best:
         # print("fk_1 is {}".format(self.fk_1))
         # encode传入的应该是按照频繁项集从小到大排序的数组
         data = self.encode(self.res, self.dataset)
-        # for line in data:
-        #     print(bin(line))
+        for line in data:
+            print(bin(line))
         # # 展示编码结果
         # return data
         root = SortedTree('', [], result, self.minSup, data)
@@ -241,15 +251,15 @@ class Best:
                         for candidate in child.prefix[2:]:
                             aaa.setdefault(candidates - {candidate}, set()).add(child)
                 # 怎么回事呢？第二个的数量还有可能超过第一个的数量？
-                print("频繁项集的个数为{}".format(len(result[-2])))
-                print("本来应该判断的个数为{}".format(worilegoule*(len(node.prefix) - 2)))
-                print("现在应该判断的个数为{}".format(len(aaa)))
+                # print("频繁项集的个数为{}".format(len(result[-2])))
+                # print("本来应该判断的个数为{}".format(worilegoule*(len(node.prefix) - 2)))
+                # print("现在应该判断的个数为{}".format(len(aaa)))
                 for Ck in aaa:
                     if Ck not in result[-2]:
                         bbb.update(set(aaa[Ck]))
-                print("cost time in process is {}".format(time.time() - s))
+                # print("cost time in process is {}".format(time.time() - s))
             # print("候选项集的个数为{}".format(worilegoule))
-            print("剪枝去掉的项集个数为{}".format(len(bbb)))
+            # print("剪枝去掉的项集个数为{}".format(len(bbb)))
             for node in res:
                 if node.children:
                     node.linking_width_first(self.mark, 'a', False, bbb)
@@ -268,6 +278,9 @@ class Best:
             #         tmp.append(child)
             #         result[-1].add(frozenset(child.prefix))
             res = tmp
+        print("result is {}".format(reduce(lambda x, y: x + len(y), result, 0)))
+
+
         # for FK in result:
         #     print(FK)
         print(len(result))
@@ -288,6 +301,7 @@ if __name__ == '__main__':
     start = time.time()
     # minSup, dataset = loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+    # dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5'], ['2', '3', '1']]
     # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
     #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
     #            ['socks', 'gloves'],
@@ -296,8 +310,8 @@ if __name__ == '__main__':
     #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
     # minSup = 3
     minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
+    # b = Best(2, dataset)
     b = Best(minSup, dataset)
-    # b = Best(minSup, dataset)
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best(2)
     # b = Best(0.2)
