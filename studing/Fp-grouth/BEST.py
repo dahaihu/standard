@@ -22,6 +22,11 @@ children 中的非节点类型，全存储为None，这样子应该会更快的
 字典通过[]获取值比get来获取值会更快
 
 可不可以通过在mergeNode的过程中维护一个headerTable
+
+1. 创建树的时候，创建成功。包含parent，以及headerTable
+2. 计算结果有问题啊，但是实例是没有问题的，也没出bug，这他妈就很无语了
+3. 上面的问题解决了，下一步试着用字典表示children？
+4. 这个用字典解决，是不是就是巅峰了?
 """
 
 
@@ -103,37 +108,10 @@ def getCur(node, inTree, node_to_ind):
         index = -1
     return node_to_ind[node] - index - 1
 
-
-def getNode(inTree, index, ind_to_node, node_to_ind):
-    """
-    通过索引获取节点的名称
-    inTree.children[index]的名称
-    :param inTree:
-    :param index:
-    :param mark:
-    :return:
-    """
-    # print("inTree is {}".format(inTree))
-    # print("inTree.children is {}".format([node.name if node else None for node in inTree.children]))
-    try:
-        ind = node_to_ind[inTree.name]
-    except KeyError:
-        ind = -1
-    return ind_to_node[ind + index + 1]
-
-
 # 我也来写个牛逼的算法
 # mark是不是应该从大到小的排列，这样好计算些？
 def updateTree(items, inTree, count, mark, ht):
-    # items[0] 在inTree之中的索引位置
-    # cur = mark[items[0]] - mark.get(inTree.name, 0) - 1
-
-    # print("inTree is {}".format(inTree.name))
-    # print("item is {}".format(items[0]))
-
-    # cur算的是items[0]在inTree树的children中的索引
-    # 子节点的初始化，初始化错了，傻逼
-    inTree.update_desc(set(items))
+    # inTree.update_desc(set(items))
     cur = getCur(items[0], inTree, mark)
     # print("index is {}".format(cur))
     # print("{}子节点的顺序为{}".format(items[0], [ele.name if isinstance(ele, TreeNode) else ele for ind, ele in enumerate(inTree.children) if ind > cur]))
@@ -142,11 +120,7 @@ def updateTree(items, inTree, count, mark, ht):
     else:
         # 初始化节点的时候，得计算孩子节点的个数
         inTree.children[cur] = TreeNode(items[0], inTree, count, [None] * (len(inTree.children) - cur - 1))
-        # ht[items[0]] = ht.setdefault(items[0], set()).add(inTree.children[cur])
-        if items[0] in ht:
-            ht[items[0]].add(inTree.children[cur])
-        else:
-            ht[items[0]] = {inTree}
+        ht.setdefault(items[0], set()).add(inTree.children[cur])
     if len(items) > 1:
         updateTree(items[1:], inTree.children[cur], count, mark, ht)
 
@@ -217,151 +191,87 @@ def mergeNode(headerTable, node1, node2):
     :param node:
     :return:
     """
-    # 在节点node2不是TreeNode的时候，直接返回node1
-    if not node2:
-        return node1
-    # 这个用来分辨，node1是节点还是字符
-    # 如果是节点，直接添加值
-    # 如果是字符，则需要初始化为一个节点
-    if node1:
-        # 这个地方相当于，仅仅对node1进行赋值，对node1的父节点的这个孩子似乎并没有任何影响
-        node1.inc(node2.count)
-        node1.descendants.update(node2.descendants.copy())
-    else:
-        # 如果维护一个headerTable的话，只需要在这更新这个headerTable了
-        node1 = TreeNode(node2.name, node2.count, [None] * len(node2.children))
-        node1.descendants = node2.descendants.copy()
-        headerTable[node1.name] = headerTable.get(node1.name, set()).add(node1)
+    node1.inc(node2.count)
     for ind, node in enumerate(node2.children):
         if node:
-            node1.children[ind] = mergeNode(headerTable, node1.children[ind], node)
+            if not node1.children[ind]:
+                node1.children[ind] = TreeNode(node.name, node1, 0, [None] * len(node.children))
+                headerTable.setdefault(node.name, set()).add(node1.children[ind])
+            mergeNode(headerTable, node1.children[ind], node)
     return node1
 
 
-def get_node_list(inTree, index, res):
+def mergeNode_no(node1, node2, headerTable):
     """
-    开始的时候，inTree肯定是一个节点
-    所以是可以正确的走下去的
-    在进行递归的调用get_node_list的时候
-    就得在inTree是节点的情况下进行调用了
-    :param inTree:
-    :param index:
-    :param res:
-    :return:
+    在node1是None的时候，如何确定node1的父节点呢？
     """
-    # if not isinstance(inTree, TreeNode):
-    #     return
-    # if isinstance(inTree.children[index], TreeNode):
-    if inTree.children[index]:
-        res.append(inTree.children[index])
-    for i in range(index - 1, -1, -1):
-        if inTree.children[i]:
-            get_node_list(inTree.children[i], index - i - 1, res)
+    for ind, node in enumerate(node2.children):
+        if node:
+            if not node1.children[ind]:
+                node1.children[ind] = TreeNode(node.name, node1, 0, [None] * len(node2.children))
+                headerTable[node.name].add(node1.children[ind])
 
+            headerTable[node.name].remove(node)
+            node1.children[ind].inc(node.count)
+            mergeNode_no(node1.children[ind], node, headerTable)
+    return node1
 
-def _sum(node_list):
-    return reduce(lambda x, y: x + y.count, node_list, 0)
+# 这个地方更新的时候，是不是还得应该更新一下headerTable
+def update2(node, node_to_ind, headerTable):
+    # 获取节点node在父节点的children中的索引
+    index = getCur(node.name, node.parent, node_to_ind)
+    for ind, child in enumerate(node.children):
+        if child:
+            # 要对headerTable进行更新
+            # 新添加的节点要加到headerTable中对应的集合中去
+            # 而对合并的节点，child，则要从headerTable中移除
+            if not node.parent.children[ind + 1 + index]:
+                node.parent.children[ind + 1 + index] = TreeNode(child.name, node.parent, 0, [None] * len(child.children))
+                headerTable[child.name].add(node.parent.children[ind + 1 + index])
+            # mergeNode_no的时候，并没有对headerTable进行更新，所以造成了结果的错误？
+            node.parent.children[ind + 1 + index].inc(child.count)
+            headerTable[child.name].remove(child)
+            mergeNode_no(node.parent.children[ind + 1 + index], child, headerTable)
+    node.parent.children[index] = None
 
-
-# 更新相同节点列表的节点，对其进行删除
-# 删除之后呢？难道又进行寻找所有节点吗？
-# 这样不是很费劲的吗
-# 这个update和find是一样的套路
-# 这个更新可能有点困难，感觉套路不对
-def update(inTree, index):
-    # print("inTree is {}".format(inTree))
-    # print("index is {}".format(index))
-    if inTree.children[index]:
-        for ind, child in enumerate(inTree.children[index].children):
-            if child:
-                # 这个地方是不是也得完成赋值，因为inTree.children[ind + 1]也是可能是字符的
-                # 如果是字符的话，更新上去不是也没用的吗
-                # 之前的update都是有问题的啊啊啊啊！！！！！
-                # 终于找到错误在哪里了，全部出现在这里
-                inTree.children[ind + 1 + index] = mergeNode(inTree.children[ind + 1 + index], child)
-    # 更新一个节点，就得把这个节点置为None
-    """
-    这个地方非常重要，如果节点设置为None之后，这个节点下的数据都不会被之后的操作访问到
-    因为都是通过节点的索引，和节点得是TreeNode类型的才行
-    """
-    inTree.children[index] = None
-    for i in range(index - 1, -1, -1):
-        if inTree.children[i]:
-            update(inTree.children[i], index - i - 1)
 
 
 """
-时间主要就在这里
-感觉改进还是有戏的
-这个mineTree花费的是最多的时间
-
-这个headerTable存储的是待处理的
+现在mineTree和节点的descendants没有关系了
+而是通过对headerTable来进行操作
 """
 def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, headerTable, res):
     """
-    基本逻辑是在inTree上剔除频繁项基节点，然后再进行频繁项基的挖掘
-    上面的删除是指，将将对应的节点置为None
-    目前来说，两步已经合成一步了，但是呢，时间似乎并没有减少
     :param inTree:
     :param minSup:
     :param prefix:
     :param res:
     :return:
     """
-    # 用来存储过滤掉的项基
-    _all = set()
-    # 可不可以将两遍遍历转化成一遍，这样的话是不是更快一些
-    # 完成两遍遍历合成一遍遍历
-    # 但是效果没有多少
-    for ind, node in enumerate(inTree.children[::-1]):
-        # ind一开始是逆序的
-        # 经过下面的操作转化成正序的
-        ind = inTree.length - ind - 1
-        node_name = getNode(inTree, ind, ind_to_node, node_to_ind)
-        if node_name not in inTree.descendants:
-            continue
-        node_list = headerTable[node_name]
+    headerList = sorted(headerTable, key=lambda x : node_to_ind[x], reverse=True)
+    # print("headerList is {}".format(headerList))
+    for header in headerList:
+        node_list = headerTable[header]
         count = reduce(lambda x, y: x + y.count, node_list, 0)
-
-        # print("node's count is {}".format(count))
         if count < minSup:
-            # _all.add(node.name if isinstance(node, TreeNode) else node)
-            update(inTree, ind)
-            # inTree.descendants.remove(node_name)
-            _all.add(node_name)
+            for node in node_list:
+                update2(node, node_to_ind, headerTable)
         else:
-            # print("new item_sets is {}".format(prefix + [node_name]))
-            res.append(prefix + [node_name])
-            node = TreeNode(node_name, 0, [None] * len(node_list[0].children))
+            """
+            照理说，这个else语句中的情况下
+            node这棵树是不应该有inTree这棵树中的非频繁节点的
+            """
+            res.append(prefix + [header])
+            print("new frequent item sets is {}".format(prefix + [header]))
+            node = TreeNode(header, inTree, 0, [None] * (len(ind_to_node) - node_to_ind[header] - 1))
             ht = dict()
             custom_merge = partial(mergeNode, ht)
             reduce(custom_merge, node_list, node)
-            node.descendants -= _all
+            # print("prefix is {}".format(prefix + [node.name]))
+            # for key, value in ht.items():
+            #     print("{} => {}".format(key, value))
+            # node.disp()
             mineTree(node, minSup, prefix + [node.name], ind_to_node, node_to_ind, ht, res)
-    """
-    第一步和第二步，可以是分离的吧？
-    如果第一步清理为None的节点，对第二步是不会造成影响的
-    """
-
-    # 第二遍的时候，添加到结果之中
-    # for ind, node in enumerate(inTree.children):
-    #     # node_name = getNode(inTree, ind, ind_to_node, node_to_ind)
-    #     # if not node_name in inTree.descendants: continue
-    #     node_name = node.name if node else getNode(inTree, ind, ind_to_node, node_to_ind)
-    #     # if node:
-    #     #     print("node.name == getNode {}".format(getNode(inTree, ind, ind_to_node, node_to_ind) == node.name))
-    #     if node_name not in inTree.descendants:
-    #         continue
-    #     print("new item_sets is {}".format(prefix + [node_name]))
-    #     res.append(prefix + [node_name])
-    #     # node_list = []
-    #     # get_node_list(inTree, ind, node_list)
-    #     node_list = d[node_name]
-    #     # 这个为什么会出现list index out of range的错误
-    #     node = TreeNode(node_name, 0, [None] * len(node_list[0].children))
-    #     reduce(mergeNode, node_list, node)
-    #     node.descendants -= _all
-    #     mineTree(node, minSup, prefix + [node.name], ind_to_node, node_to_ind, res)
 
 
 
@@ -390,11 +300,11 @@ def final_test():
     start = time.time()
     minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
     retDict = createInitSet(dataset)
-    retTree, node_to_ind = createTree(retDict, minSup)
+    retTree, node_to_ind, headerTable = createTree(retDict, minSup)
     ind_to_node = {value: key for key, value in node_to_ind.items()}
     retTree.disp()
     res = []
-    mineTree(retTree, minSup, [], ind_to_node, node_to_ind, res)
+    mineTree(retTree, minSup, [], ind_to_node, node_to_ind, headerTable, res)
     print("length is {}".format(len(res)))
     # for line in res:
     #     print(line)
@@ -405,26 +315,28 @@ def test_function():
     start = time.time()
     # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
     # dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
-    dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
-               ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
-               ['socks', 'gloves'],
-               ['bread', 'milk', 'shoes', 'socks', 'eggs'],
-               ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
-               ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
-    # dataset = [[1,2,5],[2,4],[2,3],[1,2,4],[1,3],[2,3],[1,3],[1,2,3,5],[1,2,3]]
+    # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
+    #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
+    #            ['socks', 'gloves'],
+    #            ['bread', 'milk', 'shoes', 'socks', 'eggs'],
+    #            ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
+    #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
+    dataset = [[1,2,5],[2,4],[2,3],[1,2,4],[1,3],[2,3],[1,3],[1,2,3,5],[1,2,3]]
     minSup = 3
     retDict = createInitSet(dataset)
     # for key, value in retDict.items():
     #     print("{} => {}".format(key, value))
     retTree, node_to_ind, headerTable = createTree(retDict, minSup)
     retTree.disp()
-    # ind_to_node = {value: key for key, value in node_to_ind.items()}
+    # for node in headerTable['5']:
+    #     update2(node, node_to_ind)
+    ind_to_node = {value: key for key, value in node_to_ind.items()}
     #
-    # result = []
-    # mineTree(retTree, minSup, [], ind_to_node, node_to_ind, result)
-    # print("length is {}".format(len(result)))
-    # for res in result:
-    #     print(res)
+    result = []
+    mineTree(retTree, minSup, [], ind_to_node, node_to_ind, headerTable, result)
+    print("length is {}".format(len(result)))
+    for res in result:
+        print(res)
     #
     # print("cost is {}".format(time.time() - start))
 
@@ -458,6 +370,6 @@ def test_update():
 
 
 if __name__ == '__main__':
-    # final_test()
-    test_function()
+    final_test()
+    # test_function()
     # test_update()
