@@ -1,7 +1,5 @@
 from functools import reduce, partial
 import time
-from collections import defaultdict
-
 """
 全部都不需要headerTable
 根据孩子节点的索引来进行计算
@@ -43,11 +41,11 @@ children 中的非节点类型，全存储为None，这样子应该会更快的
 class TreeNode:
     # 名字，次数，父节点
     # 初始化是不是也应该传入孩子节点的长度
-    def __init__(self, nameValue, parent, numOccur, children):
+    def __init__(self, nameValue, parent, numOccur):
         self.name = nameValue  # 当前节点的名称
         self.parent = parent
         self.count = numOccur  # 当前节点在此模式下的出现次数
-        self.children = children  # 当前节点的孩子节点
+        self.children = dict()  # children用字典来表示
 
     def inc(self, numOccur):  # 由于事务是含有次数的，所以，当前节点出现的频次可能是多余1的，所以加上numOccur
         self.count += numOccur
@@ -60,7 +58,7 @@ class TreeNode:
         :return:
         """
         print('  ' * ind, self.name, ' ', self.count)
-        for child in self.children:
+        for child in self.children.values():
             if isinstance(child, TreeNode):
                 child.disp(ind + 1)
 
@@ -82,35 +80,17 @@ def createInitSet(dataSet):
     return retDict
 
 
-def getCur(node, inTree, node_to_ind):
-    """
-    :param node: 节点的名字
-    :param inTree: 父节点
-    :param mark: 通过mark获取节点的位置
-    :return:
-    """
-    try:
-        index = node_to_ind[inTree.name]
-    except KeyError:
-        index = -1
-    return node_to_ind[node] - index - 1
-
-
 # 我也来写个牛逼的算法
 # mark是不是应该从大到小的排列，这样好计算些？
 def updateTree(items, inTree, count, mark, ht):
-    # inTree.update_desc(set(items))
-    cur = getCur(items[0], inTree, mark)
-    # print("index is {}".format(cur))
-    # print("{}子节点的顺序为{}".format(items[0], [ele.name if isinstance(ele, TreeNode) else ele for ind, ele in enumerate(inTree.children) if ind > cur]))
-    if inTree.children[cur]:
-        inTree.children[cur].inc(count)
+    if items[0] in inTree.children:
+        inTree.children[items[0]].inc(count)
     else:
         # 初始化节点的时候，得计算孩子节点的个数
-        inTree.children[cur] = TreeNode(items[0], inTree, count, [None] * (len(inTree.children) - cur - 1))
-        ht.setdefault(items[0], set()).add(inTree.children[cur])
+        inTree.children[items[0]] = TreeNode(items[0], inTree, count)
+        ht.setdefault(items[0], set()).add(inTree.children[items[0]])
     if len(items) > 1:
-        updateTree(items[1:], inTree.children[cur], count, mark, ht)
+        updateTree(items[1:], inTree.children[items[0]], count, mark, ht)
 
 
 # 创建Fpgrouth-Tree
@@ -147,7 +127,7 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
 
     ht = dict()
 
-    retTree = TreeNode('Null Set', None, 1, [None] * len(apr))  # create tree
+    retTree = TreeNode('Null Set', None, 1)  # create tree
     # 怎么建树呢？
     for tranSet, count in dataSet.items():  # go through dataset 2nd time 一猜就知道dataSet是经过处理的数据集合
         localD = {}  # 这个是用来干什么的？？？用来获取当前事务中所含的频繁项集
@@ -165,12 +145,10 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
     return retTree, mark, ht
 
 
-# 这个功能的使用，得提前创建一个节点，避免对原来的树造成混乱
-# 影响的永远都是第一个节点
-# 对第一个节点进行改造
-# 还是有点问题的，并没有node完成初始化
-# 好像并没有关联起来，仅仅对node1初始化为TreeNode，是不是没有用的
-# 还是用一个字典吧
+"""
+三个函数的功能，基本相似
+可不可以合并？
+"""
 def mergeNode(headerTable, node1, node2):
     """
     把node2节点上的数据，复制到node1上去。
@@ -180,50 +158,32 @@ def mergeNode(headerTable, node1, node2):
     :return:
     """
     node1.inc(node2.count)
-    for ind, node in enumerate(node2.children):
-        if node:
-            if not node1.children[ind]:
-                node1.children[ind] = TreeNode(node.name, node1, 0, [None] * len(node.children))
-                headerTable.setdefault(node.name, set()).add(node1.children[ind])
-            mergeNode(headerTable, node1.children[ind], node)
+    for name, child in node2.children.items():
+        if name not in node1.children:
+            node1.children[name] = TreeNode(name, node1, 0)
+            headerTable.setdefault(name, set()).add(node1.children[name])
+        mergeNode(headerTable, node1.children[name], child)
     return node1
 
-
-def mergeNode_no(node1, node2, headerTable):
+"""
+去掉非频繁节点
+"""
+def update(node1, node2, headerTable):
     """
-    在node1是None的时候，如何确定node1的父节点呢？
+    作用是合并node1和node2的子节点
+    :param node1:
+    :param node2:
+    :param headerTable:
+    :return:
     """
-    for ind, node in enumerate(node2.children):
-        if node:
-            if not node1.children[ind]:
-                node1.children[ind] = TreeNode(node.name, node1, 0, [None] * len(node2.children))
-                headerTable[node.name].add(node1.children[ind])
+    for name, child in node2.children.items():
+        if name not in node1.children:
+            node1.children[name] = TreeNode(name, node1, 0)
+            headerTable[name].add(node1.children[name])
 
-            headerTable[node.name].remove(node)
-            node1.children[ind].inc(node.count)
-            mergeNode_no(node1.children[ind], node, headerTable)
-    return node1
-
-
-# 这个地方更新的时候，是不是还得应该更新一下headerTable
-def update2(node, node_to_ind, headerTable):
-    # 获取节点node在父节点的children中的索引
-    index = getCur(node.name, node.parent, node_to_ind)
-    for ind, child in enumerate(node.children):
-        if child:
-            # 要对headerTable进行更新
-            # 新添加的节点要加到headerTable中对应的集合中去
-            # 而对合并的节点，child，则要从headerTable中移除
-            if not node.parent.children[ind + 1 + index]:
-                node.parent.children[ind + 1 + index] = TreeNode(child.name, node.parent, 0,
-                                                                 [None] * len(child.children))
-                headerTable[child.name].add(node.parent.children[ind + 1 + index])
-            # mergeNode_no的时候，并没有对headerTable进行更新，所以造成了结果的错误？
-            node.parent.children[ind + 1 + index].inc(child.count)
-            headerTable[child.name].remove(child)
-            mergeNode_no(node.parent.children[ind + 1 + index], child, headerTable)
-    node.parent.children[index] = None
-
+        node1.children[name].inc(child.count)
+        headerTable[name].remove(child)
+        update(node1.children[name], child, headerTable)
 
 """
 现在mineTree和节点的descendants没有关系了
@@ -231,7 +191,7 @@ def update2(node, node_to_ind, headerTable):
 """
 
 
-def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, headerTable, res):
+def mineTree(inTree, minSup, prefix, node_to_ind, headerTable, res):
     """
     :param inTree:
     :param minSup:
@@ -240,32 +200,34 @@ def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, headerTable, res)
     :return:
     """
     headerList = sorted(headerTable, key=lambda x: node_to_ind[x], reverse=True)
+    _all = set()
     # print("headerList is {}".format(headerList))
     for header in headerList:
         node_list = headerTable[header]
         count = reduce(lambda x, y: x + y.count, node_list, 0)
         if count < minSup:
             for node in node_list:
-                update2(node, node_to_ind, headerTable)
+                update(node.parent, node, headerTable)
+                del node.parent.children[node.name]
         else:
             """
             照理说，这个else语句中的情况下
             node这棵树是不应该有inTree这棵树中的非频繁节点的
             """
             res.append(prefix + [header])
-            print("new frequent item sets is {}".format(prefix + [header]))
-            node = TreeNode(header, inTree, 0, [None] * (len(ind_to_node) - node_to_ind[header] - 1))
+            print("newFreqSet is {}".format(prefix + [header]))
+            node = TreeNode(header, inTree, 0)
             ht = dict()
+            # 这个地方是不是得遍历一次
+            # 然后mineTree的时候也得遍历一次
             custom_merge = partial(mergeNode, ht)
             reduce(custom_merge, node_list, node)
-            # print("prefix is {}".format(prefix + [node.name]))
-            # for key, value in ht.items():
-            #     print("{} => {}".format(key, value))
-            # node.disp()
-            mineTree(node, minSup, prefix + [node.name], ind_to_node, node_to_ind, ht, res)
+            if ht:
+                # ht = {key: value for key, value in ht.items() if key not in _all}
+                mineTree(node, minSup, prefix + [node.name], node_to_ind, ht, res)
 
 
-def loadDataset(path, _max=float('inf')):
+def loadDataset(path, minSup):
     dataset = []
     with open(path, 'r') as file:
         count = 0
@@ -273,9 +235,7 @@ def loadDataset(path, _max=float('inf')):
             count += 1
             # print(line.strip().split(' '))
             dataset.append(line.strip().split(' '))
-            if count >= _max:
-                break
-    minSup = len(dataset) * 0.2
+    minSup = len(dataset) * minSup
     return minSup, dataset
 
 
@@ -284,20 +244,17 @@ def test_update():
     pass
 
 
-# 感觉是有戏的，啊哈哈，啊哈哈，这几天放假还是有收获的
-def final_test():
+def bet_test(path, minSup):
     import time
     start = time.time()
-    minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
+    minSup, dataset = loadDataset(path, minSup)
     retDict = createInitSet(dataset)
     retTree, node_to_ind, headerTable = createTree(retDict, minSup)
-    ind_to_node = {value: key for key, value in node_to_ind.items()}
+    # ind_to_node = {value: key for key, value in node_to_ind.items()}
     retTree.disp()
     res = []
-    mineTree(retTree, minSup, [], ind_to_node, node_to_ind, headerTable, res)
+    mineTree(retTree, minSup, [], node_to_ind, headerTable, res)
     print("length is {}".format(len(res)))
-    # for line in res:
-    #     print(line)
     print("cost time is {}".format(time.time() - start))
 
 
@@ -305,13 +262,13 @@ def test_function():
     start = time.time()
     # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
     # dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
-    # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
-    #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
-    #            ['socks', 'gloves'],
-    #            ['bread', 'milk', 'shoes', 'socks', 'eggs'],
-    #            ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
-    #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
-    dataset = [[1, 2, 5], [2, 4], [2, 3], [1, 2, 4], [1, 3], [2, 3], [1, 3], [1, 2, 3, 5], [1, 2, 3]]
+    dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
+               ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
+               ['socks', 'gloves'],
+               ['bread', 'milk', 'shoes', 'socks', 'eggs'],
+               ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
+               ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
+    # dataset = [[1, 2, 5], [2, 4], [2, 3], [1, 2, 4], [1, 3], [2, 3], [1, 3], [1, 2, 3, 5], [1, 2, 3]]
     minSup = 3
     retDict = createInitSet(dataset)
     # for key, value in retDict.items():
@@ -320,46 +277,18 @@ def test_function():
     retTree.disp()
     # for node in headerTable['5']:
     #     update2(node, node_to_ind)
-    ind_to_node = {value: key for key, value in node_to_ind.items()}
     #
     result = []
-    mineTree(retTree, minSup, [], ind_to_node, node_to_ind, headerTable, result)
+    mineTree(retTree, minSup, [], node_to_ind, headerTable, result)
     print("length is {}".format(len(result)))
-    for res in result:
-        print(res)
-    #
-    # print("cost is {}".format(time.time() - start))
-
-
-def test_update():
-    dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
-    # dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
-    # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
-    #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
-    #            ['socks', 'gloves'],
-    #            ['bread', 'milk', 'shoes', 'socks', 'eggs'],
-    #            ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
-    #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
-    # dataset = [[1,2,5],[2,4],[2,3],[1,2,4],[1,3],[2,3],[1,3],[1,2,3,5],[1,2,3]]
-    minSup = 2
-    retDict = createInitSet(dataset)
-    # for key, value in retDict.items():
-    #     print("{} => {}".format(key, value))
-    retTree = createTree(retDict, minSup=minSup)
-    retTree.disp()
-    update(retTree, 1)
-    retTree.disp()
-    print(retTree.children)
-    # print(retTree.children[1].children)
-    # print(retTree.children[0].children[0].children[1])
-    # result = []
-    # mineTree(retTree, minSup, [], result)
-    # print("length is {}".format(len(result)))
     # for res in result:
     #     print(res)
 
 
 if __name__ == '__main__':
-    final_test()
+    # path = r'/Users/hushichang/Downloads/pumsb.dat'
+    path = r'/Users/hushichang/mushroom.dat.txt'
+    minSup = 0.2
+    bet_test(path, minSup)
     # test_function()
     # test_update()

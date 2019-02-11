@@ -202,7 +202,7 @@ def mineTree(inTree, headerTable, minSup, preFix, freqItemList):
         newFreqSet = preFix + [basePat]
         # 但是呢，这个newFreqSet就是频繁项集吗？？？？？？？
         # print 'finalFrequent Item: ',newFreqSet    #append to set
-        # print("newFreqSet is {}".format(newFreqSet))
+        print("newFreqSet is {}".format(newFreqSet))
         freqItemList.append(newFreqSet)
         condPattBases = findPrefixPath(basePat, headerTable[basePat][1])
         # print 'condPattBases :',basePat, condPattBases
@@ -237,32 +237,36 @@ def createInitSet(dataSet):
 # dataSet=createInitSet(loadSimpDat())
 # print(dataSet)
 
-def loadDataset(path):
+def loadDataset(path, minSup):
     dataset = []
     with open(path, 'r') as file:
+        count = 0
         for line in file:
             # print(line.strip().split(' '))
             dataset.append(line.strip().split(' '))
-    global minSup
-    minSup = len(dataset) * 0.2
-    return dataset
+            count += 1
+    minSup = len(dataset) * minSup
+    return dataset, minSup
 
 from time import time
-start = time()
-simpDat = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
-# minSup = 2
-# simpDat = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
-# simpDat = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
+def fp_test(path, minSup):
+    start = time()
+    simpDat, minSup = loadDataset(path, minSup)
+    # minSup = 2
+    # simpDat = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+    # simpDat = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
 
 
-initSet = createInitSet(simpDat)
-print('数据集的长度为 {}'.format(len(initSet)))
-myFPtree, myHeaderTab = createTree(initSet, minSup)
-myFPtree.disp()
-myFreqList = []
-print('minSup is {}'.format(minSup))
-mineTree(myFPtree, myHeaderTab, minSup, [], myFreqList)
-print("myFreqList is {}".format(len(myFreqList)))
-# for items in myFreqList:
-#     print(items)
-print('cost time is {}'.format(time() - start))
+    initSet = createInitSet(simpDat)
+    print('数据集的长度为 {}'.format(len(initSet)))
+    myFPtree, myHeaderTab = createTree(initSet, minSup)
+    myFPtree.disp()
+    myFreqList = []
+    print('minSup is {}'.format(minSup))
+    mineTree(myFPtree, myHeaderTab, minSup, [], myFreqList)
+    print("myFreqList is {}".format(len(myFreqList)))
+    # for items in myFreqList:
+    #     print(items)
+    print('cost time is {}'.format(time() - start))
+
+fp_test(r'/Users/hushichang/mushroom.dat.txt', 0.2)
