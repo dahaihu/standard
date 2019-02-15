@@ -20,6 +20,8 @@ children 中的非节点类型，全存储为None，这样子应该会更快的
 
 
 字典通过[]获取值比get来获取值会更快
+
+可不可以通过在mergeNode的过程中维护一个headerTable
 """
 
 
@@ -218,6 +220,7 @@ def mergeNode(node1, node2):
         node1.inc(node2.count)
         node1.descendants.update(node2.descendants.copy())
     else:
+        # 如果维护一个headerTable的话，只需要在这更新这个headerTable了
         node1 = TreeNode(node2.name, node2.count, [None] * len(node2.children))
         node1.descendants = node2.descendants.copy()
 
@@ -297,6 +300,7 @@ def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, res):
     :param res:
     :return:
     """
+    # 用来存储过滤掉的项基
     _all = set()
     # 可不可以将两遍遍历转化成一遍，这样的话是不是更快一些
     # 完成两遍遍历合成一遍遍历
@@ -324,6 +328,7 @@ def mineTree(inTree, minSup, prefix, ind_to_node, node_to_ind, res):
             # print("new item_sets is {}".format(prefix + [node_name]))
             res.append(prefix + [node_name])
             node = TreeNode(node_name, 0, [None] * len(node_list[0].children))
+            # 可不可以在mergeNode的过程中，返回一个headerTable来
             reduce(mergeNode, node_list, node)
             node.descendants -= _all
             mineTree(node, minSup, prefix + [node.name], ind_to_node, node_to_ind, res)

@@ -199,13 +199,16 @@ def mineTree(inTree, minSup, prefix, node_to_ind, headerTable, res):
     :param res:
     :return:
     """
+    # inTree.disp()
     headerList = sorted(headerTable, key=lambda x: node_to_ind[x], reverse=True)
-    _all = set()
+    # _all = set()
     # print("headerList is {}".format(headerList))
     for header in headerList:
         node_list = headerTable[header]
         count = reduce(lambda x, y: x + y.count, node_list, 0)
         if count < minSup:
+            # print("node_list's length is {}".format(len(node_list)))
+            # print("count is {}".format(count))
             for node in node_list:
                 update(node.parent, node, headerTable)
                 del node.parent.children[node.name]
@@ -261,15 +264,15 @@ def bet_test(path, minSup):
 def test_function():
     start = time.time()
     # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
-    # dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
-    dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
-               ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
-               ['socks', 'gloves'],
-               ['bread', 'milk', 'shoes', 'socks', 'eggs'],
-               ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
-               ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
+    dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5'], ['1', '2', '3']]
+    # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
+    #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
+    #            ['socks', 'gloves'],
+    #            ['bread', 'milk', 'shoes', 'socks', 'eggs'],
+    #            ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
+    #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
     # dataset = [[1, 2, 5], [2, 4], [2, 3], [1, 2, 4], [1, 3], [2, 3], [1, 3], [1, 2, 3, 5], [1, 2, 3]]
-    minSup = 3
+    minSup = 2
     retDict = createInitSet(dataset)
     # for key, value in retDict.items():
     #     print("{} => {}".format(key, value))

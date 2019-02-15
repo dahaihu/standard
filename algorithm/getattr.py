@@ -3,6 +3,7 @@ class Color:
     blue = 'blue'
 
     def __getattr__(self, item):
+        print("item is {}".format(item))
         print("getattr is being called")
         return 'whatever'
 

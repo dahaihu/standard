@@ -76,7 +76,7 @@ class SortedTree:
                 # cur += 1
                 if self.children[cur] in duizhao:
                     del self.children[cur]
-                    continue
+                    # continue
                 else:
                     tmp.append(1 << self.children[cur].index(mark))
                     cur += 1
@@ -172,6 +172,8 @@ class Best:
         for items in self.dataset:
             for item in items:
                 self.mark[item] = self.mark.get(item, 0) + 1
+        for key, count in self.mark.items():
+            print("{} => {}".format(key, count))
         # for item, support in list(self.mark.items()):
         #     # 感觉自己就像个傻逼一样，无药可救的很
         #     # 为什么感觉自己像个傻逼呢，是因为，把下面这个不等式写成了小于等于
@@ -261,6 +263,7 @@ class Best:
             # print("候选项集的个数为{}".format(worilegoule))
             # print("剪枝去掉的项集个数为{}".format(len(bbb)))
             for node in res:
+                print("{}'s dataset is {}".format(node.prefix, node.dataset))
                 if node.children:
                     node.linking_width_first(self.mark, 'a', False, bbb)
                     for child in node.children:
@@ -281,8 +284,8 @@ class Best:
         print("result is {}".format(reduce(lambda x, y: x + len(y), result, 0)))
 
 
-        # for FK in result:
-        #     print(FK)
+        for FK in result:
+            print(FK)
         print(len(result))
 
 
@@ -301,19 +304,22 @@ if __name__ == '__main__':
     start = time.time()
     # minSup, dataset = loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     # dataset = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
-    # dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5'], ['2', '3', '1']]
+    dataset = [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5'], ['2', '3', '1']]
     # dataset = [['bread', 'milk', 'vegetable', 'fruit', 'eggs'],
     #            ['noodle', 'beef', 'pork', 'water', 'socks', 'gloves', 'shoes', 'rice'],
     #            ['socks', 'gloves'],
     #            ['bread', 'milk', 'shoes', 'socks', 'eggs'],
     #            ['socks', 'shoes', 'sweater', 'cap', 'milk', 'vegetable', 'gloves'],
     #            ['eggs', 'bread', 'milk', 'fish', 'crab', 'shrimp', 'rice']]
-    # minSup = 3
-    minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
+    # dataset = [[1,2,5],[2,4],[2,3],[1,2,4],[1,3],[2,3],[1,3],[1,2,3,5],[1,2,3]]
+    minSup = 2
+    # minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
     # b = Best(2, dataset)
     b = Best(minSup, dataset)
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best(2)
     # b = Best(0.2)
     res = b.main()
+    # for ele in res:
+    #     print(ele)
     print('cost time is {}'.format(time.time() - start))

@@ -267,7 +267,6 @@ class Apriori:
 
 from collections import OrderedDict
 
-minSup = 2
 
 
 # 一个递归树
@@ -287,7 +286,7 @@ class SortedTree:
 
     # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
     def addChild(self, node):
-        self.children.append(SortedTree(node, node + ', ' + self.prefix, self.result))
+        self.children.append(SortedTree(node, [node] + self.prefix, self.result))
 
     def addTransaction(self, transaction):
         self.dataset.append(transaction)
@@ -359,9 +358,9 @@ class SortedTree:
         然后在进行下一步的计算
         :return:
         """
-        print("self.children is {}".format([child.node for child in self.children]))
+        # print("self.children is {}".format([child.node for child in self.children]))
         tmp = [(1 << child.index(mark)) for child in self.children]
-        print("tmp is {}".format(tmp))
+        # print("tmp is {}".format(tmp))
         """
         第一步，给每个孩子节点分数据
         """
@@ -396,32 +395,21 @@ class SortedTree:
         for child in self.children:
             # 目前暂时的策略就是超过频繁项基，才可以继续挖掘子节点
             # 但是呢，这个样子会过多的筛选不必要的候选项基
-            if len(child.dataset) >= minSup:
-                self.result.append(child.node + ', ' + self.prefix)
-            else:
-                continue
-            print("prefix is {}".format(self.prefix))
-            print("node is {}".format(child.node))
-            print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
-            print("child.children.length {}".format(len(child.children)))
-            print("****" * 10)
+            # print("prefix is {}".format(self.prefix))
+            # print("node is {}".format(child.node))
+            # print("dataset is {}".format([bin(transaction) for transaction in child.dataset]))
+            # print("child.children.length {}".format(len(child.children)))
+            # print("****" * 10)
             if child.canLinked():
+                self.result.append([child.node] + self.prefix)
                 child.linking_width_first(mark)
-
-    # # 经过这个操作之后，再进行数dataset的遍历
-    # # 然后只遍历一次dataset就可以完成对dataset的分类
-    # def prev(self):
-    #     self.mark = [(1 << child.index(mark)) for child in self.children]
-
-    def getSupport(self):
-        return len(self.dataset)
 
 
 # 下一步，执行编码的操作
 # 这个可以交给之前的代码来实现
 # 然后就是完善频繁项基的步骤
 # 明天争取跑出一个版本来
-class Best:
+class Best_Encoded:
     """
     dataset: 原始的数据集
     mark: 单项集 和 支持度， 以后的每个事务记录的排序都是根据这个进行排序
@@ -435,7 +423,7 @@ class Best:
         self.res = None
 
     def loadDataSet(self):
-        return [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
+        return [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5'], ['2', '3', '1']]
         # return [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
 
     def scanDataset(self):
@@ -476,11 +464,16 @@ class Best:
         # print("fk_1 is {}".format(self.fk_1))
         # encode传入的应该是按照频繁项集从小到大排序的数组
         data = self.encode(self.res, self.dataset)
+        for d in data:
+            print(bin(d))
+        # print("length is {}".format(len(data)))
+        # print("编码后的事务记录为{}".format([bin(d) for d in data]))
         # # 展示编码结果
         # return data
-        root = SortedTree('root', '', result, data)
-        print("self.res is {}".format(self.res))
-        print("self.mark is {}".format(self.mark))
+        root = SortedTree('root', [], result, data)
+        # print("self.res is {}".format(self.res))
+        # print("self.mark is {}".format(self.mark))
+        # print("self.mark is {}".format(self.mark))
         for node in self.res:
             root.addChild(node)
         if root.canLinked():
@@ -488,6 +481,117 @@ class Best:
         print(result)
         print(len(result))
 
+
+class SortedTree_NoneEncoded:
+    def __init__(self, node, prefix, result, dataset=None):
+        self.result = result
+        self.node = node
+        self.prefix = prefix
+        self.support = 0
+        self.children = []
+        self.dataset = [] if not dataset else dataset
+
+    def canLinked(self):
+        # 真的是搞不懂，这个地方都可以有一个坑用来阻拦我
+        return len(self.dataset) >= minSup
+
+    # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
+    def addChild(self, node):
+        self.children.append(SortedTree_NoneEncoded(node, [self.node] + self.prefix, self.result))
+
+    def addTransaction(self, transaction):
+        self.dataset.append(transaction)
+
+
+    # 这一部分的计算通过广度优先的策略
+    def linking_width_first(self):
+        """
+        统计该节点每个孩子节点的支持度，对于满足支持度的进行连接和剪枝
+        然后在进行下一步的计算
+        :return:
+        """
+        """
+        第一步，给每个孩子节点分数据
+        """
+        # 划分数据集
+        for transaction in self.dataset:
+            for ind, child in enumerate(self.children):
+                if child.node in transaction:
+                    self.children[ind].addTransaction(transaction)
+
+        """
+        第二步，筛选不是频繁项集的子节点
+        """
+        cur = 0
+        while cur < len(self.children):
+            if len(self.children[cur].dataset) < minSup:
+                self.children.pop(cur)
+            else:
+                cur += 1
+        # 给该节点的每个孩子添加孩子节点
+        # 通过该节点的孩子节点给孩子节点添加孩子节点的吗
+        # 是不是应该通过该节点的兄弟节点
+        for i in range(len(self.children) - 1):
+            for j in range(i + 1, len(self.children)):
+                self.children[i].addChild(self.children[j].node)
+
+        self.support = len(self.dataset)
+        del self.dataset
+        """
+        第三步，对孩子节点进行深度优先的挖掘
+        """
+        for child in self.children:
+            # 目前暂时的策略就是超过频繁项基，才可以继续挖掘子节点
+            # 但是呢，这个样子会过多的筛选不必要的候选项基
+            if child.canLinked():
+                self.result.append([child.node] + self.prefix)
+                child.linking_width_first()
+
+class Best_NoneEncoded:
+    """
+    dataset: 原始的数据集
+    mark: 单项集 和 支持度， 以后的每个事务记录的排序都是根据这个进行排序
+
+    """
+
+    def __init__(self, minSup, dataset=None):
+        self.dataset = dataset if dataset else self.loadDataSet()
+        self.minSup = minSup
+        self.mark = {}
+        self.res = None
+
+    def loadDataSet(self):
+        return [['1', '3', '4'], ['2', '3', '5'], ['1', '2', '3', '5'], ['2', '5']]
+        # return [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
+
+    def scanDataset(self):
+        for items in self.dataset:
+            for item in items:
+                self.mark[item] = self.mark.get(item, 0) + 1
+        for item, support in list(self.mark.items()):
+            # 感觉自己就像个傻逼一样，无药可救的很
+            if support < minSup:
+                del self.mark[item]
+
+    def main(self):
+        result = []
+        self.scanDataset()
+        # print("length is {}".format(len(data)))
+        # print("编码后的事务记录为{}".format([bin(d) for d in data]))
+        # # 展示编码结果
+        # return data
+        root = SortedTree_NoneEncoded('root', [], result, [set(data) for data in self.dataset])
+        # print("self.res is {}".format(self.res))
+        print("self.mark is {}".format(self.mark))
+        # print("self.mark is {}".format(self.mark))
+        # 相当于给根节点添加孩子节点
+        for node in self.mark:
+            root.addChild(node)
+        # 查看根节点是否满足条件
+        if root.canLinked():
+            root.linking_width_first()
+        print(result)
+        print(len(result))
 
 def test(p, dataSet, minsup):
     start = time.time()
@@ -512,15 +616,16 @@ def loadDataset(path):
 """
 
 if __name__ == '__main__':
+    minSup = 2
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()
-    a = Apriori(0.2, dataSet=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
-    res = a.main()
-    print('res is {}'.format(res[0]))
+    # a = Apriori(0.2, dataSet=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
+    # res = a.main()
+    # print('res is {}'.format(res[0]))
     # b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
-    # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
-    # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
-    # b = Best(0.2)
-    # b = Best(0.2)
-    # res = b.main()
+    # b = Best_Encoded(0.2)
+    # b = Best_Encoded(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
+    # b = Best_Encoded(0.2)
+    b = Best_Encoded(0.4)
+    res = b.main()
     print('cost time is {}'.format(time.time() - start))

@@ -1,32 +1,24 @@
-d = {"status": 1, "answer": [{"color": "rgba(208,2,27,0.4)", "value": "\u5934",
-                              "points": [{"x": 125, "y": 188}, {"x": 154, "y": 188}, {"x": 125, "y": 212},
-                                         {"x": 154, "y": 212}]}, {"color": "rgba(208,2,27,0.4)", "value": "\u5934",
-                                                                  "points": [{"x": 111, "y": 273}, {"x": 144, "y": 273},
-                                                                             {"x": 111, "y": 300},
-                                                                             {"x": 144, "y": 300}]},
-                             {"color": "rgba(208,2,27,0.4)", "value": "\u5934",
-                              "points": [{"x": 395, "y": 422}, {"x": 420, "y": 422}, {"x": 395, "y": 446},
-                                         {"x": 420, "y": 446}]}, {"color": "rgba(208,2,27,0.4)", "value": "\u5934",
-                                                                  "points": [{"x": 478, "y": 445}, {"x": 500, "y": 445},
-                                                                             {"x": 478, "y": 468},
-                                                                             {"x": 500, "y": 468}]},
-                             {"color": "rgba(139,87,42,0.4)", "value": "\u2193\u3001\u4e0b\u3001\u5357",
-                              "points": [{"x": 122, "y": 166}, {"x": 217, "y": 166}, {"x": 122, "y": 238},
-                                         {"x": 217, "y": 238}]},
-                             {"color": "rgba(126,211,33,0.4)", "value": "\u2190\u3001\u5de6\u3001\u897f",
-                              "points": [{"x": 111, "y": 257}, {"x": 225, "y": 257}, {"x": 111, "y": 313},
-                                         {"x": 225, "y": 313}]},
-                             {"color": "rgba(80,227,194,0.4)", "value": "\u2198\u3001\u53f3\u4e0b\u3001\u4e1c\u5357",
-                              "points": [{"x": 363, "y": 373}, {"x": 420, "y": 373}, {"x": 363, "y": 448},
-                                         {"x": 420, "y": 448}]}, {"color": "rgba(208,2,27,0.4)", "value": "\u5934",
-                                                                  "points": [{"x": 330, "y": 441}, {"x": 351, "y": 441},
-                                                                             {"x": 330, "y": 460},
-                                                                             {"x": 351, "y": 460}]},
-                             {"color": "rgba(80,227,194,0.4)", "value": "\u2198\u3001\u53f3\u4e0b\u3001\u4e1c\u5357",
-                              "points": [{"x": 313, "y": 421}, {"x": 351, "y": 421}, {"x": 313, "y": 462},
-                                         {"x": 351, "y": 462}]},
-                             {"color": "rgba(189,16,224,0.4)", "value": "\u2196\u3001\u5de6\u4e0a\u3001\u897f\u5317",
-                              "points": [{"x": 460, "y": 420}, {"x": 500, "y": 420}, {"x": 460, "y": 469},
-                                         {"x": 500, "y": 469}]}]}
-for ele in d['answer']:
-    print(ele)
+rows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm']
+def myfunction2(word):
+    rows = [set(ele) for ele in ['qwertyuiop', 'asdfghjkl', 'zxcvbnm']]
+    for row in rows:
+        for w in word:
+            if w not in row:
+                break
+        else:
+            return True
+    return False
+
+
+def myfunction1(s):
+    res = [0, 0]
+    for ele in s:
+        if ele == 'R':
+            res[0] += 1
+        elif ele == 'L':
+            res[0] -= 1
+        elif ele == 'U':
+            res[1] += 1
+        elif ele == 'D':
+            res[1] -= 1
+    return res
