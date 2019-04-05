@@ -148,6 +148,7 @@ def createTree(dataSet, minSup=1):  # create FP-tree from dataset but don't mine
 """
 三个函数的功能，基本相似
 可不可以合并？
+似乎还能改进？合并一棵子树的时候，根节点是不是不用inc(count)。加上了也并不会使用。
 """
 def mergeNode(headerTable, node1, node2):
     """
@@ -256,6 +257,7 @@ def bet_test(path, minSup):
     # ind_to_node = {value: key for key, value in node_to_ind.items()}
     retTree.disp()
     res = []
+    # res = []
     mineTree(retTree, minSup, [], node_to_ind, headerTable, res)
     print("length is {}".format(len(res)))
     print("cost time is {}".format(time.time() - start))
@@ -281,13 +283,16 @@ def test_function():
     # for node in headerTable['5']:
     #     update2(node, node_to_ind)
     #
+    print("node_to_ind is {}".format(node_to_ind))
+    print("list is {}".format(list(node_to_ind)))
     result = []
     mineTree(retTree, minSup, [], node_to_ind, headerTable, result)
     print("length is {}".format(len(result)))
     # for res in result:
     #     print(res)
 
-
+# Better is the Best
+# 所谓的Tree-Apriori算法
 if __name__ == '__main__':
     # path = r'/Users/hushichang/Downloads/pumsb.dat'
     path = r'/Users/hushichang/mushroom.dat.txt'

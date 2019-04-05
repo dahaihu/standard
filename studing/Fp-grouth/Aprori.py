@@ -251,14 +251,14 @@ class Apriori:
         C1 = self.createC(self.dataSet)
         D = list(map(set, self.dataSet))
         L1, supportData = self.scanD(D, C1, self.minsup)
-        print('L1=>', L1)
+        # print('L1=>', L1)
         # print(supportData)
         L = [L1]
         k = 2
         while (len(L[k - 2]) > 0):
             Ck = self.aprioriGen(L[k - 2], k)
             Lk, supK = self.scanD(D, Ck, self.minsup)
-            print("L%d=>" % k, Lk)
+            # print("L%d=>" % k, Lk)
             supportData.update(supK)
             L.append(Lk)
             k += 1
@@ -602,30 +602,72 @@ def test(p, dataSet, minsup):
 
 def loadDataset(path):
     dataset = []
+    count1 = count2 = 0
     with open(path, 'r') as file:
         for line in file:
-            print(line.strip().split(' '))
-            dataset.append(line.strip().split(' '))
+            # print(line.strip().split(','))
+            # if line.strip().split(',')[-1] == '不合格':
+            #     count1 += 1
+            #     # continue
+            #     dataset.append(line.strip().split(','))
+            # elif line.strip().split(',')[-1] == '合格':
+            #     count2 += 1
+            #     # dataset.append(line.strip().split(','))
+            if line.strip().split(',')[-1] in ('合格', '不合格'):
+                dataset.append(line.strip().split(','))
+
+    # print("不合格的数量为{}".format(count1))
+    # print("合格的数量为{}".format(count2))
     global minSup
     minSup = len(dataset) * 0.2
     return dataset
 
+def generate_big_rules(L, support_data, min_conf):
+    """
+    Generate big rules from frequent itemsets.
+    Args:
+        L: The list of Lk.
+        support_data: A dictionary. The key is frequent itemset and the value is support.
+        min_conf: Minimal confidence.
+    Returns:
+        big_rule_list: A list which contains all big rules. Each big rule is represented
+                       as a 3-tuple.
+    """
+    big_rule_list = []
+    # 这个sub_set_list是用来干什么的？？？
+    sub_set_list = []
+    for i in range(0, len(L)):
+        for freq_set in L[i]:
+            for sub_set in sub_set_list:
+                if sub_set.issubset(freq_set):
+                    conf = support_data[freq_set] / support_data[freq_set - sub_set]
+                    big_rule = (freq_set - sub_set, sub_set, conf, support_data[freq_set])
+                    if conf >= min_conf and big_rule not in big_rule_list:
+                        # print freq_set-sub_set, " => ", sub_set, "conf: ", conf
+                        big_rule_list.append(big_rule)
+            sub_set_list.append(freq_set)
+    return big_rule_list
 
 """
 下一步给节点加孩子，怎么给节点加孩子呢？
 """
 
 if __name__ == '__main__':
-    minSup = 2
+    import sys
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()
-    # a = Apriori(0.2, dataSet=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
-    # res = a.main()
+    a = Apriori(0.005, dataSet=loadDataset(r"/Users/hushichang/Desktop/no_special_processed.csv"))
+    # print("size is {}".format(sys.getsizeof(a)))
+    L, support_data = a.main()
+    # print(support_data)
+    for item in generate_big_rules(L, support_data, 0.8):
+        if frozenset({'合格'}) == item[-3]:
+            print(item)
     # print('res is {}'.format(res[0]))
     # b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
     # b = Best_Encoded(0.2)
     # b = Best_Encoded(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best_Encoded(0.2)
-    b = Best_Encoded(0.4)
-    res = b.main()
-    print('cost time is {}'.format(time.time() - start))
+    # b = Best_Encoded(0.4)
+    # res = b.main()
+    # print('cost time is {}'.format(time.time() - start))

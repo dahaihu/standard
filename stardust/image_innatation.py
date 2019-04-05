@@ -78,7 +78,7 @@ class ImageAnnotation:
 
 # image_url = 'https://qiniu-test.startask.net/20180822_alipalm2-thumb_down-fheart_0227_136_1537026634.jpg'
 # annotation = [{"color": "rgba(255,0,0,0.4)", "points": [{"x": 443.2837693270005, "y": 1082.4650746247853}, {"x": 691.5389083838324, "y": 1082.4650746247853}, {"x": 443.2837693270005, "y": 1499.039439800118}, {"x": 691.5389083838324, "y": 1499.039439800118}], "value": "\u6446\u59ff\u52bf\u7684\u624b"}, {"color": "rgba(255,0,0,0.4)", "points": [{"x": 644.1060184201081, "y": 832.8882910697675}, {"x": 951.5630921806885, "y": 832.8882910697675}, {"x": 644.1060184201081, "y": 1245.9801894978204}, {"x": 951.5630921806885, "y": 1245.9801894978204}], "value": "\u6446\u59ff\u52bf\u7684\u624b"}]
-# instance = ImageAnnotation(image_url, annotation, 'test')
+# instance = ImageAnnotation(image_url, annotation, 'CompleteBinary.py')
 # instance.export_polygon_rectangle()
 
 info = {"status": 1, "answer": [{"<\u7236\u6807\u7b7e0>ppl": {
@@ -106,11 +106,11 @@ info = {"status": 1, "answer": [{"<\u7236\u6807\u7b7e0>ppl": {
                                                                                            {"x": 479, "y": 73.5},
                                                                                            {"x": 440, "y": 131.06},
                                                                                            {"x": 479, "y": 131.06}]}}]}
-image_url = 'https://qiniu-test.startask.net/001F7A47E8B0_1524987015.backgroud_0_1537263745.jpg'
+image_url = 'https://qiniu-CompleteBinary.py.startask.net/001F7A47E8B0_1524987015.backgroud_0_1537263745.jpg'
 for ele in info['answer']:
     print(ele)
     for key, value in ele.items():
         print(key, value)
 annotaion = info.get('answer')
-instance = ImageAnnotation(image_url, annotaion, 'test')
+instance = ImageAnnotation(image_url, annotaion, 'CompleteBinary.py')
 instance.export_polygon_rectangle()

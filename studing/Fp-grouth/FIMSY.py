@@ -1,8 +1,10 @@
 import time
 from functools import reduce
+
 """
 代码里很多用数组的索引当做键来进行操作的，这个很有意思
 """
+
 
 class SortedTree:
     def __init__(self, node, prefix, result, min_sup, dataset=None):
@@ -103,7 +105,8 @@ class SortedTree:
         """
         # 划分数据集
         # print("dataset's length is {}".format(len(self.dataset)))
-        for transaction in self.dataset:
+
+        for transaction in data:
             for ind, ttt in enumerate(tmp):
                 if transaction & ttt == ttt:
                     self.children[ind].addTransaction(transaction)
@@ -111,16 +114,16 @@ class SortedTree:
 
         """
         第二步，筛选不是频繁项集的子节点
-        
+
         这个不就是相当于已经过滤了一遍了吗？
         那你个煞笔的第三步是用来干什么的？
         用来浪费时间的吗？
         傻屌东西
-        
+
         这样的话，速度可以提升多少呢？
-        
+
         可以一倍的吗？
-        
+
         """
         self.children = [child for child in self.children if len(child.dataset) >= self.min_sup]
         # cur = 0
@@ -220,9 +223,11 @@ class Best:
         self.scanDataset()
         # print("fk_1 is {}".format(self.fk_1))
         # encode传入的应该是按照频繁项集从小到大排序的数组
+        global data
         data = self.encode(self.res, self.dataset)
         for line in data:
             print(bin(line))
+        print("data's length is {}".format(len(data)))
         # # 展示编码结果
         # return data
         root = SortedTree('', [], result, self.minSup, data)
@@ -271,8 +276,6 @@ class Best:
             #             tmp.append(child)
             #             result[-1].add(frozenset(child.prefix))
 
-
-
             for node in res:
                 if not node.children:
                     continue
@@ -285,10 +288,8 @@ class Best:
                     tmp.append(child)
                     result[-1].add(frozenset(child.prefix))
 
-
             res = tmp
         print("result is {}".format(reduce(lambda x, y: x + len(y), result, 0)))
-
 
         for FK in result:
             print(FK)
@@ -304,7 +305,7 @@ def loadDataset(path):
     minSup = len(dataset) * 0.2
     return minSup, dataset
 
-# 所谓的Node-Apriori算法
+
 if __name__ == '__main__':
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()

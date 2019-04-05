@@ -4,19 +4,19 @@ from .mathfunc import *
 
 class TestMathFunc(unittest.TestCase):
     # def setUp(self):
-    #     print("before a test case")
+    #     print("before a CompleteBinary.py case")
     #
     # def tearDown(self):
-    #     print("after a test case")
+    #     print("after a CompleteBinary.py case")
 
     # @staticmethod
     # def setUpClass(cls):
-    #     print("before a test suite")
+    #     print("before a CompleteBinary.py suite")
     #
     #
     # @staticmethod
     # def tearDownClass(cls):
-    #     print("after a test suite")
+    #     print("after a CompleteBinary.py suite")
 
     """Test mathfuc.py"""
 

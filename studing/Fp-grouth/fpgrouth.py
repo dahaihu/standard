@@ -269,4 +269,4 @@ def fp_test(path, minSup):
     #     print(items)
     print('cost time is {}'.format(time() - start))
 
-fp_test(r'/Users/hushichang/mushroom.dat.txt', 0.2)
+fp_test(r'/Users/hushichang/mushroom.dat.txt', 0.12)

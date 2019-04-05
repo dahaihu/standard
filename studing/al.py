@@ -175,7 +175,7 @@ def _audio_time_iou(pre_time, post_time):
 #
 # #
 start = time.time()
-with open("test.json", 'r') as file:
+with open("CompleteBinary.py.json", 'r') as file:
     content = json.load(file)
     for ind, ele in enumerate(content):
         pre = ele.get('pre')
@@ -227,5 +227,5 @@ print(time.time()-start)
 #
 # res = []
 # res.append({"pre":pre_demo, 'post':post_demo})
-# with open("test.json", 'w') as file:
+# with open("CompleteBinary.py.json", 'w') as file:
 #     json.dump(res, file)

@@ -1,12 +1,40 @@
-class A:
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
+def func(S, A, B):
+    if not any((S, A, B)):
+        return True
+    if A and B:
+        if S[0] == A[0] and S[0] == B[0]:
+            if not func(S[1:], A[1:], B):
+                return func(S[1:], A, B[1:])
+            return True
+        elif S[0] == A[0]:
+            return func(S[1:], A[1:], B)
+        elif S[0] == B[0]:
+            return func(S[1:], A, B[1:])
+        else:
+            return False
+    if A:
+        if S != A:
+            return False
+        return True
+    if B:
+        if S != B:
+            return False
+        return True
 
-    def __str__(self):
-        return '<{}, {}>'.format(self.a, self.b)
+    return False
+
+A = "chdkeold"
+B = "jgkhqp"
+S = "chdjkgkheqopld"
+
+A = "aebc"
+B = "axbd"
+S = "axaebdbc"
 
 
-if __name__ == '__main__':
-    a = A(1, 2)
-    print(a)
+A = "aac"
+B = "bba"
+S = "aabcab"
+print(func(S, A, B))
+
+

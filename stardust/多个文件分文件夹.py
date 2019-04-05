@@ -32,4 +32,4 @@ def func(path, standard):
 
 func("/Users/mac/Desktop/ahaha", 2000)
 
-# test()
+# CompleteBinary.py()

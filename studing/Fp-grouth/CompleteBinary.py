@@ -1,8 +1,10 @@
 import time
 from functools import reduce
+
 """
 代码里很多用数组的索引当做键来进行操作的，这个很有意思
 """
+
 
 class SortedTree:
     def __init__(self, node, prefix, result, min_sup, dataset=None):
@@ -16,6 +18,7 @@ class SortedTree:
         """
         self.result = result
         self.node = node
+        # 这个节点的prefix是包括当前节点的
         self.prefix = prefix
         self.support = 0
         self.min_sup = min_sup
@@ -27,7 +30,8 @@ class SortedTree:
 
     # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
     def addChild(self, node):
-        self.children.append(SortedTree(node, [node] + self.prefix, self.result, self.min_sup))
+        # print("mark is {}".format(mark))
+        self.children.append(SortedTree(node, self.prefix | (1 << node), self.result, self.min_sup))
 
     # 给该节点添加包含该节点前缀的事务
     def addTransaction(self, transaction):
@@ -39,63 +43,23 @@ class SortedTree:
 
     # 对该节点进行剪枝
     def valid_candidate(self, candidate, fpset):
-        candidates = set(candidate)
-        # print("candidate is {}".format(candidate))
-        # print("fpset is {}".format(fpset))
-        # 这个地方其实只要从第三个以及以后开始验证就好了
-        # 因为最后两个是连接而成的，分别去掉最后两个肯定就是频繁(k-1)项集了
-        for element in candidate[2:]:
-            if (candidates - {element}) not in fpset:
+        right = 0
+        left = candidate
+        while left:
+            tmp = left & (left - 1)
+            cur = tmp ^ left
+            if (tmp | right) not in fpset:
                 return False
+            right |= cur
+            left = tmp
         return True
 
+
     # 这一部分的计算通过广度优先的策略
-    def linking_width_first(self, mark, fqsets, pre=True, duizhao=set()):
-        """
-        有一个问题就是在什么时候进行候选项基的筛选呢？
-        对这个候选项基进行的每个子集进行判断，然后进行遍历事务记录，统计支持度
-        应该是遍历事务记录之前进行判断了是吧？
-        也就是在第一步的时候就应该判断一下子了！！！
-        :param mark:
-        :param fqsets:
-        :param pre:
-        :return:
-        """
-        # print("prefix is {}".format(self.prefix))
-        # print("self.children is {}".format([child.node for child in self.children]))
-
-        """
-        对孩子节点进行剪枝
-        """
-        # if duizhao:
-        #     tmp = []
-        #     cur = 0
-        #     while cur < len(self.children):
-        #         # if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
-        #         #     del self.children[cur]
-        #         # cur += 1
-        #         if self.children[cur] in duizhao:
-        #             del self.children[cur]
-        #             # continue
-        #         else:
-        #             tmp.append(1 << self.children[cur].index(mark))
-        #             cur += 1
-        # else:
-        #     tmp = [(1 << child.index(mark)) for child in self.children]
-
+    def linking_width_first(self, fqsets, pre=True):
         if pre:
             self.children = [child for child in self.children if self.valid_candidate(child.prefix, fqsets)]
-        #     # cur = 0
-        #     # while cur < len(self.children):
-        #     #     # 传进来的pre是在count小于等于2的时候，这样就不需要经过剪枝了
-        #     #     # 在count大于2的时候就需要通过self.valida_candidate来剪枝达到效果了
-        #     #     if not self.valid_candidate(self.children[cur].prefix, fqsets):
-        #     #         del self.children[cur]
-        #     #     cur += 1
-        tmp = [(1 << child.index(mark)) for child in self.children]
-
-        # 找到问题了，children不做修正的话，分子节点的时候，会继续分的
-
+        tmp = [(1 << child.node) for child in self.children]
         # print("tmp is {}".format(tmp))
         """
         能不能在给对孩子节点进行筛选呢？
@@ -111,16 +75,16 @@ class SortedTree:
 
         """
         第二步，筛选不是频繁项集的子节点
-        
+
         这个不就是相当于已经过滤了一遍了吗？
         那你个煞笔的第三步是用来干什么的？
         用来浪费时间的吗？
         傻屌东西
-        
+
         这样的话，速度可以提升多少呢？
-        
+
         可以一倍的吗？
-        
+
         """
         self.children = [child for child in self.children if len(child.dataset) >= self.min_sup]
         # cur = 0
@@ -175,11 +139,6 @@ class Best:
                 self.mark[item] = self.mark.get(item, 0) + 1
         for key, count in self.mark.items():
             print("{} => {}".format(key, count))
-        # for item, support in list(self.mark.items()):
-        #     # 感觉自己就像个傻逼一样，无药可救的很
-        #     # 为什么感觉自己像个傻逼呢，是因为，把下面这个不等式写成了小于等于
-        #     if support < self.minSup:
-        #         del self.mark[item]
         self.mark = {key: value for key, value in self.mark.items() if value >= self.minSup}
         # 对键(键是频繁一项集，值是对应的支持度)从大到小排列
         self.res = sorted(self.mark, key=lambda x: self.mark[x], reverse=True)
@@ -225,15 +184,13 @@ class Best:
             print(bin(line))
         # # 展示编码结果
         # return data
-        root = SortedTree('', [], result, self.minSup, data)
+        root = SortedTree('', 0, result, self.minSup, data)
         # print("self.res is {}".format(self.res))
         print("self.mark is {}".format(self.mark))
-        res = []
-        for node in self.res:
-            root.addChild(node)
-        # if root.canLinked():
-        #     root.linking_width_first(self.mark)
-        res.append(root)
+        length = len(self.res)
+        for i in range(length):
+            root.addChild(length - 1 - i)
+        res = [root]
         count = 0
         while res:
             count += 1
@@ -241,54 +198,19 @@ class Best:
             print("cost time is {}".format(time.time() - start))
             tmp = []
             result.append(set())
-            # bbb = set()
-            # # worilegoule = 0
-            # if count > 2:
-            #     s = time.time()
-            #     # 对所有的候选项集进行剪枝的操作
-            #     aaa = dict()
-            #     for node in res:
-            #         for child in node.children:
-            #             # worilegoule += 1
-            #             candidates = frozenset(child.prefix)
-            #             for candidate in child.prefix[2:]:
-            #                 aaa.setdefault(candidates - {candidate}, set()).add(child)
-            #     # 怎么回事呢？第二个的数量还有可能超过第一个的数量？
-            #     # print("频繁项集的个数为{}".format(len(result[-2])))
-            #     # print("本来应该判断的个数为{}".format(worilegoule*(len(node.prefix) - 2)))
-            #     # print("现在应该判断的个数为{}".format(len(aaa)))
-            #     for Ck in aaa:
-            #         if Ck not in result[-2]:
-            #             bbb.update(set(aaa[Ck]))
-            #     # print("cost time in process is {}".format(time.time() - s))
-            # # print("候选项集的个数为{}".format(worilegoule))
-            # # print("剪枝去掉的项集个数为{}".format(len(bbb)))
-            # for node in res:
-            #     # print("{}'s dataset is {}".format(node.prefix, node.dataset))
-            #     if node.children:
-            #         node.linking_width_first(self.mark, 'a', False, bbb)
-            #         for child in node.children:
-            #             tmp.append(child)
-            #             result[-1].add(frozenset(child.prefix))
-
-
-
             for node in res:
                 if not node.children:
                     continue
                 if count > 2:
-                    node.linking_width_first(self.mark, result[-2],
-                                             pre=True)
+                    node.linking_width_first(result[-2], pre=True)
                 else:
-                    node.linking_width_first(self.mark, set(), pre=False)
+                    node.linking_width_first(set(), pre=False)
                 for child in node.children:
                     tmp.append(child)
-                    result[-1].add(frozenset(child.prefix))
-
+                    result[-1].add(child.prefix)
 
             res = tmp
         print("result is {}".format(reduce(lambda x, y: x + len(y), result, 0)))
-
 
         for FK in result:
             print(FK)
@@ -304,7 +226,7 @@ def loadDataset(path):
     minSup = len(dataset) * 0.2
     return minSup, dataset
 
-# 所谓的Node-Apriori算法
+
 if __name__ == '__main__':
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()

@@ -20,12 +20,12 @@ def func(path, standard):
     for filename in filenames[(i-1)*standard:]:
         shutil.move(os.path.join(path, filename), '{}'.format(i))
     print("移动完成{}个文件".format(i * standard))
-func("test", 10)
+func("CompleteBinary.py", 10)
 
-# shutil.move("test.json", '1')
+# shutil.move("CompleteBinary.py.json", '1')
 
 # import os
-# os.mkdir('test')
+# os.mkdir('CompleteBinary.py')
 # for i in range(100):
-#     with open(os.path.join('test', "{}.txt".format(i+1)), 'w') as file:
+#     with open(os.path.join('CompleteBinary.py', "{}.txt".format(i+1)), 'w') as file:
 #         file.write(str(i))

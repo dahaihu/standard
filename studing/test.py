@@ -21,5 +21,5 @@ for i in range(1000):
 
     post_demo.append(tmpd)
 res.append({"pre":pre_demo, 'post':post_demo})
-with open('test.json', 'w') as file:
+with open('CompleteBinary.py.json', 'w') as file:
     json.dump(res, file)
