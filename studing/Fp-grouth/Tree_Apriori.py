@@ -295,8 +295,9 @@ def test_function():
 # 所谓的Tree-Apriori算法
 if __name__ == '__main__':
     # path = r'/Users/hushichang/Downloads/pumsb.dat'
-    path = r'/Users/hushichang/mushroom.dat.txt'
-    minSup = 0.2
+    # path = r'/Users/hushichang/mushroom.dat.txt'
+    path = r'/Users/hushichang/chess.dat'
+    minSup = 0.6
     bet_test(path, minSup)
     # test_function()
     # test_update()

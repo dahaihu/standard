@@ -1,4 +1,4 @@
-from .Better import bet_test
+from .Tree_Apriori import bet_test
 from .fpgrouth import fp_test
 import time
 

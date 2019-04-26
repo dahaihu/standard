@@ -613,9 +613,9 @@ def loadDataset(path):
             # elif line.strip().split(',')[-1] == '合格':
             #     count2 += 1
             #     # dataset.append(line.strip().split(','))
-            if line.strip().split(',')[-1] in ('合格', '不合格'):
-                dataset.append(line.strip().split(','))
-
+            # if line.strip().split(',')[-1] in ('合格', '不合格'):
+            #     dataset.append(line.strip().split(','))
+            dataset.append(line.strip().split(" "))
     # print("不合格的数量为{}".format(count1))
     # print("合格的数量为{}".format(count2))
     global minSup
@@ -656,13 +656,17 @@ if __name__ == '__main__':
     import sys
     # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
     start = time.time()
-    a = Apriori(0.005, dataSet=loadDataset(r"/Users/hushichang/Desktop/no_special_processed.csv"))
+    # a = Apriori(0.005, dataSet=loadDataset(r"/Users/hushichang/Desktop/no_special_processed.csv"))
+    # a = Apriori(0.2, dataSet=loadDataset(r"/Users/hushichang/mushroom.dat.txt"))
+    a = Apriori(0.85, dataSet=loadDataset(r"/Users/hushichang/chess.dat"))
     # print("size is {}".format(sys.getsizeof(a)))
     L, support_data = a.main()
+    print("length is {}".format(len(support_data)))
+    print("cost time is {}".format(time.time() - start))
     # print(support_data)
-    for item in generate_big_rules(L, support_data, 0.8):
-        if frozenset({'合格'}) == item[-3]:
-            print(item)
+    # for item in generate_big_rules(L, support_data, 0.8):
+    #     if frozenset({'合格'}) == item[-3]:
+    #         print(item)
     # print('res is {}'.format(res[0]))
     # b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
     # b = Best_Encoded(0.2)
