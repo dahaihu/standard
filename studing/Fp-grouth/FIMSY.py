@@ -7,7 +7,7 @@ from functools import reduce
 
 
 class SortedTree:
-    def __init__(self, node, prefix, result, min_sup, dataset=None):
+    def __init__(self, node, prefix, result, min_sup, value, dataset=None):
         """
 
         :param node: 该节点的值
@@ -22,14 +22,15 @@ class SortedTree:
         self.support = 0
         self.min_sup = min_sup
         self.children = []
+        self.value = value
         self.dataset = [] if not dataset else dataset
 
     def canLinked(self):
         return len(self.dataset) >= self.min_sup
 
     # 给一个节点添加前缀，那么就是该节点的前缀，加上该节点的值
-    def addChild(self, node):
-        self.children.append(SortedTree(node, [node] + self.prefix, self.result, self.min_sup))
+    def addChild(self, node, left):
+        self.children.append(SortedTree(node, [node] + self.prefix, self.result, self.min_sup, self.value | (1 << left)))
 
     # 给该节点添加包含该节点前缀的事务
     def addTransaction(self, transaction):
@@ -69,32 +70,17 @@ class SortedTree:
         """
         对孩子节点进行剪枝
         """
-        # if duizhao:
-        #     tmp = []
-        #     cur = 0
-        #     while cur < len(self.children):
-        #         # if not (pre or self.valid_candidate(self.children[cur].prefix, fqsets)):
-        #         #     del self.children[cur]
-        #         # cur += 1
-        #         if self.children[cur] in duizhao:
-        #             del self.children[cur]
-        #             # continue
-        #         else:
-        #             tmp.append(1 << self.children[cur].index(mark))
-        #             cur += 1
-        # else:
-        #     tmp = [(1 << child.index(mark)) for child in self.children]
-
         if pre:
             self.children = [child for child in self.children if self.valid_candidate(child.prefix, fqsets)]
-        #     # cur = 0
-        #     # while cur < len(self.children):
-        #     #     # 传进来的pre是在count小于等于2的时候，这样就不需要经过剪枝了
-        #     #     # 在count大于2的时候就需要通过self.valida_candidate来剪枝达到效果了
-        #     #     if not self.valid_candidate(self.children[cur].prefix, fqsets):
-        #     #         del self.children[cur]
-        #     #     cur += 1
-        tmp = [(1 << child.index(mark)) for child in self.children]
+
+        # tmp = [(1 << child.index(mark)) for child in self.children]
+
+        # tmp = []
+        # for child in self.children:
+        #     aaa = 0
+        #     for node in child.prefix:
+        #         aaa = aaa | (1 << mark[node])
+        #     tmp.append(aaa)
 
         # 找到问题了，children不做修正的话，分子节点的时候，会继续分的
 
@@ -107,8 +93,8 @@ class SortedTree:
         # print("dataset's length is {}".format(len(self.dataset)))
 
         for transaction in data:
-            for ind, ttt in enumerate(tmp):
-                if transaction & ttt == ttt:
+            for ind, child in enumerate(self.children):
+                if transaction & child.value == child.value:
                     self.children[ind].addTransaction(transaction)
                     # break
 
@@ -139,10 +125,7 @@ class SortedTree:
         """
         for i in range(len(self.children) - 1):
             for j in range(i + 1, len(self.children)):
-                self.children[i].addChild(self.children[j].node)
-                # # 这一部分注释，是可以在这进行候选项集的剪枝操作
-                # if pre or self.valid_candidate([self.children[j].node] + self.children[i].prefix, fqsets):
-                #     self.children[i].addChild(self.children[j].node)
+                self.children[i].addChild(self.children[j].node, mark[self.children[j].node])
 
         self.support = len(self.dataset)
         del self.dataset
@@ -178,11 +161,6 @@ class Best:
                 self.mark[item] = self.mark.get(item, 0) + 1
         for key, count in self.mark.items():
             print("{} => {}".format(key, count))
-        # for item, support in list(self.mark.items()):
-        #     # 感觉自己就像个傻逼一样，无药可救的很
-        #     # 为什么感觉自己像个傻逼呢，是因为，把下面这个不等式写成了小于等于
-        #     if support < self.minSup:
-        #         del self.mark[item]
         self.mark = {key: value for key, value in self.mark.items() if value >= self.minSup}
         # 对键(键是频繁一项集，值是对应的支持度)从大到小排列
         self.res = sorted(self.mark, key=lambda x: self.mark[x], reverse=True)
@@ -212,17 +190,10 @@ class Best:
             # res.append(bin(tmp))
         return encodedAffair
 
-    def encode_transaction(self, fk1, data):
-        tmp = 0
-        for ele in fk1:
-            tmp = (tmp << 1) + 1 if ele in data else tmp << 1
-        return tmp
 
     def main(self):
         result = []
         self.scanDataset()
-        # print("fk_1 is {}".format(self.fk_1))
-        # encode传入的应该是按照频繁项集从小到大排序的数组
         global data
         data = self.encode(self.res, self.dataset)
         for line in data:
@@ -230,12 +201,12 @@ class Best:
         print("data's length is {}".format(len(data)))
         # # 展示编码结果
         # return data
-        root = SortedTree('', [], result, self.minSup, data)
+        root = SortedTree('', [], result, self.minSup, 0, data)
         # print("self.res is {}".format(self.res))
         print("self.mark is {}".format(self.mark))
         res = []
         for node in self.res:
-            root.addChild(node)
+            root.addChild(node, self.mark[node])
         # if root.canLinked():
         #     root.linking_width_first(self.mark)
         res.append(root)
@@ -246,36 +217,6 @@ class Best:
             print("cost time is {}".format(time.time() - start))
             tmp = []
             result.append(set())
-            # bbb = set()
-            # # worilegoule = 0
-            # if count > 2:
-            #     s = time.time()
-            #     # 对所有的候选项集进行剪枝的操作
-            #     aaa = dict()
-            #     for node in res:
-            #         for child in node.children:
-            #             # worilegoule += 1
-            #             candidates = frozenset(child.prefix)
-            #             for candidate in child.prefix[2:]:
-            #                 aaa.setdefault(candidates - {candidate}, set()).add(child)
-            #     # 怎么回事呢？第二个的数量还有可能超过第一个的数量？
-            #     # print("频繁项集的个数为{}".format(len(result[-2])))
-            #     # print("本来应该判断的个数为{}".format(worilegoule*(len(node.prefix) - 2)))
-            #     # print("现在应该判断的个数为{}".format(len(aaa)))
-            #     for Ck in aaa:
-            #         if Ck not in result[-2]:
-            #             bbb.update(set(aaa[Ck]))
-            #     # print("cost time in process is {}".format(time.time() - s))
-            # # print("候选项集的个数为{}".format(worilegoule))
-            # # print("剪枝去掉的项集个数为{}".format(len(bbb)))
-            # for node in res:
-            #     # print("{}'s dataset is {}".format(node.prefix, node.dataset))
-            #     if node.children:
-            #         node.linking_width_first(self.mark, 'a', False, bbb)
-            #         for child in node.children:
-            #             tmp.append(child)
-            #             result[-1].add(frozenset(child.prefix))
-
             for node in res:
                 if not node.children:
                     continue
@@ -291,8 +232,8 @@ class Best:
             res = tmp
         print("result is {}".format(reduce(lambda x, y: x + len(y), result, 0)))
 
-        for FK in result:
-            print(FK)
+        # for FK in result:
+        #     print(FK)
         print(len(result))
 
 
