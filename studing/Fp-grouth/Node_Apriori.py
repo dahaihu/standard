@@ -176,8 +176,8 @@ class Best:
         for items in self.dataset:
             for item in items:
                 self.mark[item] = self.mark.get(item, 0) + 1
-        for key, count in self.mark.items():
-            print("{} => {}".format(key, count))
+        # for key, count in self.mark.items():
+        #     print("{} => {}".format(key, count))
         # for item, support in list(self.mark.items()):
         #     # 感觉自己就像个傻逼一样，无药可救的很
         #     # 为什么感觉自己像个傻逼呢，是因为，把下面这个不等式写成了小于等于
@@ -187,7 +187,7 @@ class Best:
         # 对键(键是频繁一项集，值是对应的支持度)从大到小排列
         self.res = sorted(self.mark, key=lambda x: self.mark[x], reverse=True)
         self.fk_1 = self.mark
-        print("fk_1 is {}".format(self.fk_1))
+        # print("fk_1 is {}".format(self.fk_1))
         # 这个mark是用来是的每个节点进行移动然后找到对应的位置的
         self.mark = {node: (len(self.res) - ind - 1) for ind, node in enumerate(self.res)}
 
@@ -197,8 +197,8 @@ class Best:
     # 前面的移动的位次是最多的
     # 这个fk1，传入的是self.res
     def encode(self, fk1, data):
-        print("data is {}".format(data))
-        print("fk1 is {}".format(fk1))
+        # print("data is {}".format(data))
+        # print("fk1 is {}".format(fk1))
         encodedAffair = []
         # 传入的数据集里面，事务记录是用set来进行存储的是不是更快一些？
         # 但是这部分本来就够快的
@@ -224,8 +224,8 @@ class Best:
         # print("fk_1 is {}".format(self.fk_1))
         # encode传入的应该是按照频繁项集从小到大排序的数组
         data = self.encode(self.res, self.dataset)
-        for line in data:
-            print(bin(line))
+        # for line in data:
+        #     print(bin(line))
         # # 展示编码结果
         # return data
         root = SortedTree('', [], result, self.minSup, data)
@@ -302,8 +302,8 @@ def loadDataset(minsup, path):
     dataset = []
     with open(path, 'r') as file:
         for line in file:
-            print(line.strip().split(' '))
-            dataset.append(line.strip().split(' '))
+            # print(line.strip().split(' '))
+            dataset.append(line.strip().split(','))
     global nums
     nums = len(dataset)
     print("transaction nums is {}".format(len(dataset)))
@@ -327,8 +327,8 @@ if __name__ == '__main__':
     # dataset = [[1,2,5],[2,4],[2,3],[1,2,4],[1,3],[2,3],[1,3],[1,2,3,5],[1,2,3]]
     # minSup = 2
     # minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
-    minSup, dataset = loadDataset(0.85, r'/Users/hushichang/chess.dat')
-    # b = Best(2, dataset)
+    minSup, dataset = loadDataset(0.0003, r'/Users/hushichang/Downloads/groceries.csv')
+    # b = Best(2, dataset0
     b = Best(minSup, dataset)
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
     # b = Best(2)

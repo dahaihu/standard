@@ -159,8 +159,8 @@ class Best:
         for items in self.dataset:
             for item in items:
                 self.mark[item] = self.mark.get(item, 0) + 1
-        for key, count in self.mark.items():
-            print("{} => {}".format(key, count))
+        # for key, count in self.mark.items():
+        #     print("{} => {}".format(key, count))
         self.mark = {key: value for key, value in self.mark.items() if value >= self.minSup}
         # 对键(键是频繁一项集，值是对应的支持度)从大到小排列
         self.res = sorted(self.mark, key=lambda x: self.mark[x], reverse=True)
@@ -175,8 +175,8 @@ class Best:
     # 前面的移动的位次是最多的
     # 这个fk1，传入的是self.res
     def encode(self, fk1, data):
-        print("data is {}".format(data))
-        print("fk1 is {}".format(fk1))
+        # print("data is {}".format(data))
+        # print("fk1 is {}".format(fk1))
         encodedAffair = []
         # 传入的数据集里面，事务记录是用set来进行存储的是不是更快一些？
         # 但是这部分本来就够快的
@@ -196,8 +196,8 @@ class Best:
         self.scanDataset()
         global data
         data = self.encode(self.res, self.dataset)
-        for line in data:
-            print(bin(line))
+        # for line in data:
+        #     print(bin(line))
         print("data's length is {}".format(len(data)))
         # # 展示编码结果
         # return data
@@ -241,8 +241,8 @@ def loadDataset(minsup, path):
     dataset = []
     with open(path, 'r') as file:
         for line in file:
-            print(line.strip().split(' '))
-            dataset.append(line.strip().split(' '))
+            # print(line.strip().split(' '))
+            dataset.append(line.strip().split(','))
     minSup = len(dataset) * minsup
     return minSup, dataset
 
@@ -262,7 +262,7 @@ if __name__ == '__main__':
     # dataset = [[1,2,5],[2,4],[2,3],[1,2,4],[1,3],[2,3],[1,3],[1,2,3,5],[1,2,3]]
     # minSup = 2
     # minSup, dataset = loadDataset(r'/Users/hushichang/mushroom.dat.txt')
-    minSup, dataset = loadDataset(0.85, r'/Users/hushichang/chess.dat')
+    minSup, dataset = loadDataset(0.004, r'/Users/hushichang/Downloads/groceries.csv')
     # b = Best(2, dataset)
     b = Best(minSup, dataset)
     # b = Best(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))

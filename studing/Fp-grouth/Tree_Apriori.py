@@ -1,5 +1,6 @@
 from functools import reduce, partial
 import time
+import copy
 """
 全部都不需要headerTable
 根据孩子节点的索引来进行计算
@@ -238,7 +239,7 @@ def loadDataset(path, minSup):
         for line in file:
             count += 1
             # print(line.strip().split(' '))
-            dataset.append(line.strip().split(' '))
+            dataset.append(line.strip().split(','))
     minSup = len(dataset) * minSup
     return minSup, dataset
 
@@ -250,14 +251,15 @@ def test_update():
 
 def bet_test(path, minSup):
     import time
-    start = time.time()
+    # start = time.time()
     minSup, dataset = loadDataset(path, minSup)
     retDict = createInitSet(dataset)
     retTree, node_to_ind, headerTable = createTree(retDict, minSup)
     # ind_to_node = {value: key for key, value in node_to_ind.items()}
     retTree.disp()
-    res = []
+    start = time.time()
     # res = []
+    res = []
     mineTree(retTree, minSup, [], node_to_ind, headerTable, res)
     print("length is {}".format(len(res)))
     print("cost time is {}".format(time.time() - start))
@@ -296,8 +298,9 @@ def test_function():
 if __name__ == '__main__':
     # path = r'/Users/hushichang/Downloads/pumsb.dat'
     # path = r'/Users/hushichang/mushroom.dat.txt'
-    path = r'/Users/hushichang/chess.dat'
-    minSup = 0.6
+    # path = r'/Users/hushichang/chess.dat'
+    path = r'/Users/hushichang/Downloads/groceries.csv'
+    minSup = 0.0003
     bet_test(path, minSup)
     # test_function()
     # test_update()

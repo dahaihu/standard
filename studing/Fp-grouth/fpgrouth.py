@@ -243,14 +243,14 @@ def loadDataset(path, minSup):
         count = 0
         for line in file:
             # print(line.strip().split(' '))
-            dataset.append(line.strip().split(' '))
+            dataset.append(line.strip().split(','))
             count += 1
     minSup = len(dataset) * minSup
     return dataset, minSup
 
 from time import time
 def fp_test(path, minSup):
-    start = time()
+    # start = time()
     simpDat, minSup = loadDataset(path, minSup)
     # minSup = 2
     # simpDat = [{'A', 'B', 'C', 'D'}, {'C', 'E'}, {'C', 'D'}, {'A', 'C', 'D'}, {'C', 'D', 'E'}]
@@ -261,6 +261,7 @@ def fp_test(path, minSup):
     print('数据集的长度为 {}'.format(len(initSet)))
     myFPtree, myHeaderTab = createTree(initSet, minSup)
     myFPtree.disp()
+    start = time()
     myFreqList = []
     print('minSup is {}'.format(minSup))
     mineTree(myFPtree, myHeaderTab, minSup, [], myFreqList)
@@ -269,4 +270,4 @@ def fp_test(path, minSup):
     #     print(items)
     print('cost time is {}'.format(time() - start))
 # fp_test(r'/Users/hushichang/mushroom.dat.txt', 0.2)
-fp_test(r'/Users/hushichang/chess.dat', 0.8)
+fp_test(r'/Users/hushichang/Downloads/groceries.csv', 0.0003)

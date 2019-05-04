@@ -615,7 +615,7 @@ def loadDataset(path):
             #     # dataset.append(line.strip().split(','))
             # if line.strip().split(',')[-1] in ('合格', '不合格'):
             #     dataset.append(line.strip().split(','))
-            dataset.append(line.strip().split(" "))
+            dataset.append(line.strip().split(","))
     # print("不合格的数量为{}".format(count1))
     # print("合格的数量为{}".format(count2))
     global minSup
@@ -641,37 +641,45 @@ def generate_big_rules(L, support_data, min_conf):
             for sub_set in sub_set_list:
                 if sub_set.issubset(freq_set):
                     conf = support_data[freq_set] / support_data[freq_set - sub_set]
-                    big_rule = (freq_set - sub_set, sub_set, conf, support_data[freq_set])
+                    big_rule = (freq_set - sub_set, sub_set, conf, support_data[freq_set], conf/support_data[sub_set])
                     if conf >= min_conf and big_rule not in big_rule_list:
                         # print freq_set-sub_set, " => ", sub_set, "conf: ", conf
                         big_rule_list.append(big_rule)
             sub_set_list.append(freq_set)
     return big_rule_list
 
-"""
-下一步给节点加孩子，怎么给节点加孩子呢？
-"""
+def get_buhege(path):
+    count = 0
+    with open(path, 'r') as file:
+        for line in file:
+            tmp = line.strip().split(',')
+            if tmp[-1] == '不合格':
+                # continue
+                print(tmp)
+                count += 1
+    print("不合格记录数为{}".format(count))
 
-if __name__ == '__main__':
-    import sys
-    # loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt')
+def get_lab_result():
     start = time.time()
     # a = Apriori(0.005, dataSet=loadDataset(r"/Users/hushichang/Desktop/no_special_processed.csv"))
     # a = Apriori(0.2, dataSet=loadDataset(r"/Users/hushichang/mushroom.dat.txt"))
-    a = Apriori(0.85, dataSet=loadDataset(r"/Users/hushichang/chess.dat"))
+    a = Apriori(0.002, dataSet=loadDataset(r"/Users/hushichang/Downloads/groceries.csv"))
+    # a = Apriori(0.77, dataSet=loadDataset(r"/Users/hushichang/chess.dat"))
     # print("size is {}".format(sys.getsizeof(a)))
     L, support_data = a.main()
+    # for key, value in support_data.items():
+    #     print("{} => {}".format(key, value))
     print("length is {}".format(len(support_data)))
     print("cost time is {}".format(time.time() - start))
     # print(support_data)
-    # for item in generate_big_rules(L, support_data, 0.8):
-    #     if frozenset({'合格'}) == item[-3]:
-    #         print(item)
-    # print('res is {}'.format(res[0]))
-    # b = Best(0.2, dataset=loadDataset(r'C:\Users\shichang.hu\Desktop\mushroom.dat.txt'))
-    # b = Best_Encoded(0.2)
-    # b = Best_Encoded(0.2, dataset=loadDataset(r'/Users/hushichang/mushroom.dat.txt'))
-    # b = Best_Encoded(0.2)
-    # b = Best_Encoded(0.4)
-    # res = b.main()
-    # print('cost time is {}'.format(time.time() - start))
+    # rules = [item for item in generate_big_rules(L, support_data, 0.8) if item[-4] == {'不合格'}]
+    # rules = generate_big_rules(L, support_data, 0.8)
+    # print(len(rules))
+    # for rule in rules:
+    #     # if rule[-4] == {"合格"}:
+    #     if rule[-1] >= 5 and (len(rule[1]) == 1 or len(rule[0]) == 1):
+    #         print(rule)
+
+if __name__ == '__main__':
+    # get_buhege(r"/Users/hushichang/Desktop/no_special_processed.csv")
+    get_lab_result()
