@@ -661,9 +661,9 @@ def get_buhege(path):
 
 def get_lab_result():
     start = time.time()
-    # a = Apriori(0.005, dataSet=loadDataset(r"/Users/hushichang/Desktop/no_special_processed.csv"))
+    a = Apriori(0.005, dataSet=loadDataset(r"no_special_processed.csv"))
     # a = Apriori(0.2, dataSet=loadDataset(r"/Users/hushichang/mushroom.dat.txt"))
-    a = Apriori(0.002, dataSet=loadDataset(r"/Users/hushichang/Downloads/groceries.csv"))
+    # a = Apriori(0.002, dataSet=loadDataset(r"/Users/hushichang/Downloads/groceries.csv"))
     # a = Apriori(0.77, dataSet=loadDataset(r"/Users/hushichang/chess.dat"))
     # print("size is {}".format(sys.getsizeof(a)))
     L, support_data = a.main()
@@ -671,15 +671,16 @@ def get_lab_result():
     #     print("{} => {}".format(key, value))
     print("length is {}".format(len(support_data)))
     print("cost time is {}".format(time.time() - start))
-    # print(support_data)
-    # rules = [item for item in generate_big_rules(L, support_data, 0.8) if item[-4] == {'不合格'}]
-    # rules = generate_big_rules(L, support_data, 0.8)
-    # print(len(rules))
-    # for rule in rules:
-    #     # if rule[-4] == {"合格"}:
-    #     if rule[-1] >= 5 and (len(rule[1]) == 1 or len(rule[0]) == 1):
-    #         print(rule)
-
+    print(support_data)
+    rules = [item for item in generate_big_rules(L, support_data, 0.8) if item[-4] == {'不合格'}]
+    rules = generate_big_rules(L, support_data, 0.8)
+    print(len(rules))
+    for rule in rules:
+        # if rule[-4] == {"合格"}:
+        if rule[-1] >= 100:
+        # if rule[-1] >= 5 and (len(rule[1]) == 1 or len(rule[0]) == 1):
+            print(rule)
+        # print(rule)
 if __name__ == '__main__':
     # get_buhege(r"/Users/hushichang/Desktop/no_special_processed.csv")
     get_lab_result()
