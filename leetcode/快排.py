@@ -1,9 +1,9 @@
 import random
 
-# 含义，含义，含义
+
 def func(nums, start, end):
     left, right = start + 1, end
-    while True:
+    while left <= right:
         while left < right and nums[left] < nums[start]:
             left += 1
         while nums[right] > nums[start]:
@@ -13,20 +13,20 @@ def func(nums, start, end):
         nums[left], nums[right] = nums[right], nums[left]
         left += 1
         right -= 1
-    nums[right], nums[start] = nums[start], nums[right]
+    nums[start], nums[right] = nums[right], nums[start]
     return right
 
 
-def quickSort(nums, left, right):
-    if left < right:
-        mid = func(nums, left, right)
-        print('left is {}, right is {}, mid is {}, nums is {}'.format(left, right, mid, nums))
-        quickSort(nums, left, mid - 1)
-        quickSort(nums, mid + 1, right)
+def quickSort(nums, start, end):
+    if start < end:
+        mid = func(nums, start, end)
+        quickSort(nums, start, mid - 1)
+        quickSort(nums, mid + 1, end)
 
 
-# nums = list(range(10))
-# random.shuffle(nums)
-nums = [5, 1, 2, 3]
-quickSort(nums, 0, len(nums) - 1)
-print(nums)
+if __name__ == '__main__':
+    nums = [random.randint(1, 10) for _ in range(10)]
+    print('original nums is ', nums)
+    random.shuffle(nums)
+    quickSort(nums, 0, len(nums) - 1)
+    print('sorted nums is ', nums)
