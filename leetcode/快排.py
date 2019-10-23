@@ -4,14 +4,11 @@ import random
 def func(nums, start, end):
     left, right = start + 1, end
     while left <= right:
-        while left < right and nums[left] < nums[start]:
+        while left < right and nums[start] > nums[left]:
             left += 1
         while nums[right] > nums[start]:
             right -= 1
-        # 等于的时候也得退出
-        # exp: [5, 2, 4, 4, 3, 3]
-        # 此时 left = right = 5
-        # 不退出的话，left得继续减1，从而造成mid =  4, 而5没有移动到最右边最大值的位置
+        # 相等的时候是在边界的时候
         if left >= right:
             break
         nums[left], nums[right] = nums[right], nums[left]

@@ -28,20 +28,18 @@ class Solution:
         :param cost:
         :return:
         """
-        mark = list(map(lambda x, y: x - y, gas, cost))
-        if sum(mark) < 0:
-            return -1
-        print(mark)
-        i, j = 0, len(mark) - 1
-        tmp = 0
-        while i <= j:
-            if tmp < 0:
-                tmp += mark[j]
-                j -= 1
+        length = len(gas)
+        mark = [gas[i] - cost[i] for i in range(length)]
+        sum = 0
+        left, right = 0, length - 1
+        while left <= right:
+            if sum >= 0:
+                sum += mark[left]
+                left += 1
             else:
-                tmp += mark[i]
-                i += 1
-        return j+1 if j != len(mark)-1 else 0
+                sum += mark[right]
+                right -= 1
+        return left % length if sum >= 0 else -1
 
 
 gas = [2, 3, 4]
